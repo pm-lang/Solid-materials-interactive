@@ -1,0 +1,2988 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NCERT Grade 6 Science: Materials & Their Structure</title>
+    <meta name="description" content="Interactive 3D Science Learning Platform for NCERT Grade 6 Science: Materials and Their Structure. Explore States of Matter, Changes of State, Water Cycle, Atoms, and Compounds.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            50: '#f0fdfa',
+                            500: '#14b8a6',
+                            900: '#042f2e',
+                            dark: '#070b16',
+                            card: 'rgba(15, 23, 42, 0.85)',
+                            accent: '#00f3ff',
+                            purple: '#a855f7',
+                            amber: '#f59e0b',
+                            emerald: '#10b981'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Three.js & OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <!-- MathJax for LaTeX Chemistry & Physics Notation -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- MediaPipe Hands & Camera Utils for AI Webcam Gesture Control -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+    <style>
+        body {
+            background-color: #060913;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 243, 255, 0.35);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 243, 255, 0.15);
+        }
+        .glow-text {
+            text-shadow: 0 0 12px rgba(0, 243, 255, 0.5);
+        }
+        .glow-purple {
+            text-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060913;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f3ff;
+        }
+        /* Canvas containers */
+        .sim-container {
+            position: relative;
+            width: 100%;
+            height: 480px;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #0d1527 0%, #050811 100%);
+            border: 1px solid rgba(0, 243, 255, 0.25);
+        }
+        /* Custom range slider styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #1e293b;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #00f3ff;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -6px;
+            box-shadow: 0 0 10px #00f3ff;
+            transition: transform 0.15s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        .diagram-img {
+            border-radius: 1rem;
+            border: 1px solid rgba(0, 243, 255, 0.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+        .diagram-img:hover {
+            transform: scale(1.01);
+            border-color: rgba(0, 243, 255, 0.5);
+        }
+        /* Full-page video background */
+        #video-bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            overflow: hidden;
+            transition: opacity 0.6s ease;
+        }
+        #video-bg-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.35;
+            filter: saturate(1.2) brightness(0.6);
+        }
+        #video-bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: linear-gradient(180deg, rgba(6, 9, 19, 0.75) 0%, rgba(6, 9, 19, 0.55) 40%, rgba(6, 9, 19, 0.7) 80%, rgba(6, 9, 19, 0.92) 100%);
+            pointer-events: none;
+        }
+
+        /* AI Webcam Hand Tracking PIP HUD */
+        #webcam-hud-pip {
+            box-shadow: 0 10px 30px -5px rgba(0, 243, 255, 0.25), 0 0 1px 1px rgba(0, 243, 255, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .webcam-active-glow {
+            animation: cyberPulse 2s infinite alternate;
+        }
+        @keyframes cyberPulse {
+            0% { box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); border-color: rgba(0, 243, 255, 0.6); }
+            100% { box-shadow: 0 0 25px rgba(0, 243, 255, 0.7); border-color: rgba(0, 243, 255, 0.9); }
+        }
+        .temp-glow-hot {
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+        }
+        .temp-glow-cold {
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- FULL-PAGE VIDEO BACKGROUND -->
+    <div id="video-bg-container">
+        <video autoplay muted loop playsinline id="bg-video">
+            <source src="Water cycle.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div id="video-bg-overlay"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- TOP STICKY NAVIGATION HUD                                    -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg shadow-cyan-500/30">
+                    <i class="fa-solid fa-atom text-xl animate-spin-slow"></i>
+                </div>
+                <div>
+                    <div class="text-[10px] font-mono text-cyan-400 tracking-wider font-bold">NCERT GRADE 6 SCIENCE • UNIT STUDY GUIDE</div>
+                    <div class="text-sm sm:text-base font-bold text-white tracking-wide">Materials & Their Structure</div>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs (Smooth Scroll Inline Anchors) -->
+            <nav class="hidden lg:flex items-center space-x-1 text-xs font-medium">
+                <a href="#section-states" class="px-2.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition">1. States of Matter</a>
+                <a href="#section-changes" class="px-2.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition">2. Changes of State</a>
+                <a href="#section-watercycle" class="px-2.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition">3. Water Cycle</a>
+                <a href="#section-atoms" class="px-2.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition">4. Atoms & Elements</a>
+                <a href="#section-compounds" class="px-2.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition">5. Compounds & Mixtures</a>
+                <a href="#section-quiz" class="px-2.5 py-1.5 rounded-lg hover:bg-slate-800 text-amber-300 hover:text-amber-400 transition font-bold">6. Knowledge Check</a>
+                <button onclick="toggleBgVideo()" id="bg-video-toggle" class="ml-2 px-2 py-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-cyan-400 transition flex items-center gap-1" title="Toggle Background Video">
+                    <i class="fa-solid fa-film text-[10px]"></i>
+                    <span class="text-[10px] font-mono" id="bg-video-label">BG: On</span>
+                </button>
+            </nav>
+
+            <!-- Utility Controls -->
+            <div class="flex items-center space-x-3">
+                <button id="sound-toggle" onclick="toggleAudio()" class="p-2 rounded-lg bg-slate-800/80 text-slate-400 hover:text-cyan-400 hover:bg-slate-700 transition" title="Toggle Synthesized Audio FX">
+                    <i class="fa-solid fa-volume-xmark text-sm" id="sound-icon"></i>
+                </button>
+                <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono">
+                    <span class="text-slate-400">Score:</span>
+                    <span id="nav-score" class="font-bold text-amber-400">0 / 6</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT CONTAINER                                      -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-20">
+
+        <!-- HERO SECTION -->
+        <section class="relative rounded-3xl overflow-hidden glass-panel p-8 sm:p-12 border border-cyan-500/30">
+            <div class="absolute -right-20 -top-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10 max-w-3xl space-y-4">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                    <span>100% Factual NCERT Grade 6 Interactive Lab Deck</span>
+                </div>
+                <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                    Explore the Hidden Architecture of <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-teal-300 to-purple-500 glow-text">Matter</span>
+                </h1>
+                <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+                    All matter in the universe is made of microscopic particles. Discover how atomic arrangements dictate solids, liquids, and gases, simulate real-time thermal phase changes, trace the planetary water cycle, assemble molecules, and physically separate mixtures.
+                </p>
+                <div class="pt-4 flex flex-wrap gap-4">
+                    <a href="#lab-1" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-bold text-sm hover:shadow-lg hover:shadow-cyan-500/25 transition flex items-center space-x-2">
+                        <i class="fa-solid fa-cube"></i>
+                        <span>Launch 3D Particle Crucible</span>
+                    </a>
+                    <a href="#section-changes" class="px-6 py-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-200 font-bold text-sm hover:border-cyan-500/50 hover:text-cyan-400 transition flex items-center space-x-2">
+                        <i class="fa-solid fa-fire-burner"></i>
+                        <span>Explore Latent Heat</span>
+                    </a>
+                    <a href="#lab-3" class="px-6 py-3 rounded-xl bg-purple-900/40 border border-purple-500/40 text-purple-300 font-bold text-sm hover:bg-purple-800/50 transition flex items-center space-x-2">
+                        <i class="fa-solid fa-atom"></i>
+                        <span>3D Atomic & Molecular Forge</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- CHAPTER 1: SOLIDS, LIQUIDS, AND GASES                       -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <section id="section-states" class="space-y-6 scroll-mt-24">
+            <div class="flex items-center space-x-3">
+                <span class="px-3 py-1 rounded-lg bg-cyan-500/10 text-cyan-400 font-mono text-sm font-bold border border-cyan-500/20">MODULE 01</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-wide">Solids, Liquids, and Gases</h2>
+            </div>
+            
+            <p class="text-sm text-slate-300 leading-relaxed max-w-4xl">
+                All matter in the universe is made of microscopic particles. The spacing, arrangement, and motion of these particles dictate whether a material is a solid, a liquid, or a gas.
+            </p>
+
+            <!-- High-Res Factual Diagram Embed -->
+            <div class="glass-panel p-6 rounded-3xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono text-cyan-400 font-bold"><i class="fa-solid fa-image mr-2"></i>SCIENTIFIC REFERENCE INFOGRAPHIC</span>
+                    <span class="text-xs font-mono text-slate-400">Microscopic Particle Lattice & Kinetic Motion</span>
+                </div>
+                <img src="assets/states_of_matter_diagram.jpg" alt="Scientific diagram of Solids, Liquids, and Gases" class="w-full h-auto diagram-img">
+            </div>
+
+            <!-- Factual Comparison Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Solid -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border-t-4 border-t-cyan-400">
+                    <div class="flex items-center justify-between">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 font-bold text-lg">
+                            <i class="fa-solid fa-cubes"></i>
+                        </div>
+                        <span class="text-xs font-mono text-cyan-400 font-bold uppercase">Ice / 100K - 273K</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">1. Solid State</h3>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Particles are tightly packed in a regular, fixed geometric lattice. The forces of attraction are strong enough to prevent them from moving freely.
+                    </p>
+                    <ul class="text-xs text-slate-300 space-y-2 font-mono">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-cyan-400 mr-2"></i><strong>Fixed Shape & Fixed Volume</strong></li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-cyan-400 mr-2"></i>Incompressible (no empty gaps)</li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-cyan-400 mr-2"></i>Particles only <em>vibrate</em> in place</li>
+                    </ul>
+                </div>
+
+                <!-- Liquid -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border-t-4 border-t-teal-400">
+                    <div class="flex items-center justify-between">
+                        <div class="w-10 h-10 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-400 font-bold text-lg">
+                            <i class="fa-solid fa-droplet"></i>
+                        </div>
+                        <span class="text-xs font-mono text-teal-400 font-bold uppercase">Water / 273K - 373K</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">2. Liquid State</h3>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Particles are still close together, but have enough kinetic energy to break out of fixed positions and slide smoothly past one another.
+                    </p>
+                    <ul class="text-xs text-slate-300 space-y-2 font-mono">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-teal-400 mr-2"></i><strong>Variable Shape (Takes Container)</strong></li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-teal-400 mr-2"></i><strong>Definite, Fixed Volume</strong></li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-teal-400 mr-2"></i>Fluid motion; virtually incompressible</li>
+                    </ul>
+                </div>
+
+                <!-- Gas -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 border-t-4 border-t-purple-400">
+                    <div class="flex items-center justify-between">
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-lg">
+                            <i class="fa-solid fa-wind"></i>
+                        </div>
+                        <span class="text-xs font-mono text-purple-400 font-bold uppercase">Steam / >373K</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">3. Gaseous State</h3>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Particles have high kinetic energy and are separated by massive empty distances with negligible attractive forces. They expand to fill any space.
+                    </p>
+                    <ul class="text-xs text-slate-300 space-y-2 font-mono">
+                        <li class="flex items-center"><i class="fa-solid fa-check text-purple-400 mr-2"></i><strong>No Fixed Shape, No Fixed Volume</strong></li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-purple-400 mr-2"></i><strong>Highly Compressible</strong></li>
+                        <li class="flex items-center"><i class="fa-solid fa-check text-purple-400 mr-2"></i>Rapid random straight-line motion</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- LAB 1: 3D PARTICLE CRUCIBLE -->
+            <div id="lab-1" class="glass-panel p-6 rounded-3xl space-y-4 border border-cyan-500/30">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-mono text-cyan-400 font-bold">LAB 01 — 3D REAL-TIME PARTICLE CRUCIBLE</span>
+                        <h3 class="text-xl font-bold text-white">Interactive Particle Dynamics Simulator</h3>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-700 text-xs font-mono">
+                        <span class="text-slate-400">Observed Phase:</span>
+                        <span id="phase-badge" class="font-bold text-cyan-400 uppercase">Solid Crystal Lattice</span>
+                    </div>
+                </div>
+
+                <!-- Simulation Canvas -->
+                <div class="sim-container" id="particle-canvas-container">
+                    <div class="absolute top-4 left-4 z-10 glass-card px-4 py-3 rounded-xl text-xs space-y-1.5 border border-slate-700/80">
+                        <div class="flex items-center justify-between space-x-4">
+                            <span class="text-slate-400">Temperature ($T$):</span>
+                            <span id="hud-temp" class="font-mono text-cyan-400 font-bold">100 K (-173°C)</span>
+                        </div>
+                        <div class="flex items-center justify-between space-x-4">
+                            <span class="text-slate-400">Avg Kinetic Energy ($K_E$):</span>
+                            <span id="hud-ke" class="font-mono text-emerald-400 font-bold">Low (Lattice Vibration)</span>
+                        </div>
+                        <div class="flex items-center justify-between space-x-4">
+                            <span class="text-slate-400">Container Pressure ($P$):</span>
+                            <span id="hud-pressure" class="font-mono text-amber-400 font-bold">0.1 atm</span>
+                        </div>
+                    </div>
+
+                    <div class="absolute bottom-4 right-4 z-10 text-[10px] text-slate-400 font-mono bg-slate-950/80 px-2 py-1 rounded">
+                        <i class="fa-solid fa-arrows-rotate mr-1 text-cyan-400"></i> Click & drag to rotate 3D view | Scroll to zoom
+                    </div>
+
+                    <!-- Webcam PIP Gesture HUD -->
+                    <div id="webcam-hud-pip" class="hidden absolute top-4 right-4 z-20 w-72 sm:w-80 bg-slate-950/95 backdrop-blur-md rounded-2xl border border-cyan-500/50 shadow-2xl overflow-hidden transition-all duration-300">
+                        <div class="flex items-center justify-between px-3 py-2 bg-slate-900/90 border-b border-slate-800 text-xs font-mono">
+                            <div class="flex items-center space-x-1.5 text-cyan-400 font-bold">
+                                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                                <span>AI HAND THERMO-TRACKER</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="toggleWebcamMirror()" title="Flip Mirror View" class="text-slate-400 hover:text-cyan-300 transition text-xs px-1">
+                                    <i class="fa-solid fa-arrows-left-right"></i>
+                                </button>
+                                <button onclick="toggleWebcamHandTracking()" title="Close Webcam" class="text-slate-400 hover:text-rose-400 transition text-xs px-1">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="relative bg-slate-950 aspect-video flex items-center justify-center overflow-hidden">
+                            <!-- Hidden source video -->
+                            <video id="webcam-video" class="hidden" playsinline muted autoplay></video>
+                            <!-- Render canvas with skeleton and thermal overlay -->
+                            <canvas id="webcam-canvas" width="320" height="240" class="w-full h-full object-cover"></canvas>
+                            
+                            <!-- Thermometer Gauge on Left -->
+                            <div class="absolute left-2.5 top-2.5 bottom-2.5 w-3 bg-slate-900/80 rounded-full border border-slate-700/80 flex flex-col justify-end p-0.5 pointer-events-none">
+                                <div id="pip-temp-fill" class="w-full bg-gradient-to-t from-cyan-400 via-teal-400 to-amber-500 rounded-full transition-all duration-75" style="height: 20%;"></div>
+                            </div>
+
+                            <!-- Target Temp Badge -->
+                            <div class="absolute top-2.5 right-2.5 bg-slate-950/85 backdrop-blur-sm border border-slate-700/80 rounded-lg px-2.5 py-1 text-[11px] font-mono pointer-events-none">
+                                <div class="text-[9px] text-slate-400 uppercase tracking-wider">Target Temp</div>
+                                <div id="pip-temp-text" class="text-cyan-400 font-bold">100 K (-173°C)</div>
+                            </div>
+
+                            <!-- Live Gesture Detection Pill -->
+                            <div id="pip-gesture-badge" class="absolute bottom-2.5 left-8 right-2.5 bg-slate-950/85 backdrop-blur-sm border border-cyan-500/40 rounded-lg px-2 py-1 text-[10px] font-mono text-cyan-300 flex items-center justify-between pointer-events-none">
+                                <span id="pip-gesture-text" class="flex items-center gap-1 truncate">
+                                    <i class="fa-solid fa-hand"></i>
+                                    <span>Hold hand up to camera</span>
+                                </span>
+                                <span id="pip-phase-tag" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">SOLID</span>
+                            </div>
+                        </div>
+
+                        <!-- Mini HUD Status Bar -->
+                        <div class="px-3 py-2 bg-slate-900/80 border-t border-slate-800 text-[11px] font-mono flex items-center justify-between text-slate-300">
+                            <span id="pip-instruction" class="text-slate-400 text-[10px]">⬆️ Raise: Heat | ⬇️ Lower: Cool</span>
+                            <span id="pip-mode-label" class="text-[10px] text-cyan-400 font-semibold">Vertical Mode</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <div class="space-y-1">
+                        <label class="text-xs font-mono text-slate-300 flex justify-between">
+                            <span>Thermal Energy Slider</span>
+                            <span id="temp-slider-val" class="text-cyan-400 font-bold">100 K</span>
+                        </label>
+                        <input type="range" id="temp-slider" min="10" max="500" value="100" class="w-full">
+                        <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                            <span>10 K (Deep Freeze)</span>
+                            <span>273 K (Melting)</span>
+                            <span>373 K (Boiling)</span>
+                            <span>500 K (Hot Gas)</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-xs font-mono text-slate-300">Substance Profile</label>
+                        <select id="material-select" onchange="onMaterialChange()" class="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-400 font-mono">
+                            <option value="water" selected>Water (H₂O) — MP: 273 K, BP: 373 K</option>
+                            <option value="neon">Neon (Ne) — MP: 24 K, BP: 27 K</option>
+                            <option value="argon">Argon (Ar) — MP: 84 K, BP: 87 K</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center justify-center space-x-2 pt-2">
+                        <button onclick="setPhasePreset(100)" class="px-3 py-2 bg-slate-800 hover:bg-cyan-500/20 text-xs rounded-lg border border-slate-700 text-cyan-400 transition font-mono font-bold">Solid Ice (100 K)</button>
+                        <button onclick="setPhasePreset(310)" class="px-3 py-2 bg-slate-800 hover:bg-teal-500/20 text-xs rounded-lg border border-slate-700 text-teal-400 transition font-mono font-bold">Liquid (310 K)</button>
+                        <button onclick="setPhasePreset(460)" class="px-3 py-2 bg-slate-800 hover:bg-purple-500/20 text-xs rounded-lg border border-slate-700 text-purple-400 transition font-mono font-bold">Gas Steam (460 K)</button>
+                    </div>
+                </div>
+
+                <!-- Webcam AI Gesture Control Bar -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900/80 p-3.5 rounded-2xl border border-cyan-500/30">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button id="webcam-toggle-btn" onclick="toggleWebcamHandTracking()" class="px-4 py-2.5 bg-gradient-to-r from-cyan-600 via-teal-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-xs font-bold font-mono shadow-lg shadow-cyan-500/25 flex items-center space-x-2 transition transform active:scale-95 border border-cyan-400/40">
+                            <i id="webcam-btn-icon" class="fa-solid fa-camera"></i>
+                            <span id="webcam-btn-text">Enable Webcam Hand Tracking</span>
+                        </button>
+                        
+                        <div id="webcam-status-pill" class="hidden items-center space-x-2 bg-slate-950/90 border border-emerald-500/40 px-3 py-1.5 rounded-xl text-xs font-mono">
+                            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span id="webcam-status-text" class="text-emerald-300 font-semibold">Tracking Hand</span>
+                        </div>
+
+                        <!-- Mode Toggle -->
+                        <div id="webcam-mode-container" class="hidden items-center space-x-1 bg-slate-950/80 border border-slate-700 px-2 py-1 rounded-xl text-xs font-mono">
+                            <span class="text-slate-400 text-[11px] mr-1">Axis:</span>
+                            <button id="mode-vertical-btn" onclick="setGestureMode('vertical')" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[11px] font-bold">Vertical (Up/Down)</button>
+                            <button id="mode-horizontal-btn" onclick="setGestureMode('horizontal')" class="px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[11px]">Horizontal (Left/Right)</button>
+                        </div>
+                    </div>
+
+                    <div class="text-[11px] font-mono text-slate-400 flex items-center space-x-2">
+                        <span class="text-cyan-400 font-bold"><i class="fa-solid fa-lightbulb mr-1"></i>Hint:</span>
+                        <span>Move hand <span class="text-amber-400 font-semibold">UP to Heat 🔥</span> | <span class="text-cyan-300 font-semibold">DOWN to Freeze ❄️</span> | <span class="text-teal-300 font-semibold">Fist ✊ to Freeze</span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- CHAPTER 2: CHANGES OF STATE & LATENT HEAT                   -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <section id="section-changes" class="space-y-6 scroll-mt-24">
+            <div class="flex items-center space-x-3">
+                <span class="px-3 py-1 rounded-lg bg-teal-500/10 text-teal-400 font-mono text-sm font-bold border border-teal-500/20">MODULE 02</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-wide">Changes of State & Energy Transitions</h2>
+            </div>
+
+            <!-- Core Rules Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Factual Thermodynamics Rules -->
+                <div class="glass-panel p-6 rounded-2xl space-y-4">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-arrows-spin text-teal-400"></i>
+                        <span>State Transition Engine</span>
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Phase changes are <strong>physical transformations</strong> caused by adding or removing thermal energy (heat). Heat alters particle kinetic movement without changing the chemical identity of the substance.
+                    </p>
+
+                    <div class="space-y-2.5 font-mono text-xs">
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-amber-400 font-bold"><i class="fa-solid fa-fire mr-2"></i>Melting (Solid $\rightarrow$ Liquid)</span>
+                            <span class="text-slate-400">Thermal energy breaks crystal lattice</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-teal-400 font-bold"><i class="fa-solid fa-snowflake mr-2"></i>Freezing (Liquid $\rightarrow$ Solid)</span>
+                            <span class="text-slate-400">Cooling locks particles back into grid</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-cyan-400 font-bold"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Boiling / Evaporation (Liquid $\rightarrow$ Gas)</span>
+                            <span class="text-slate-400">Particles gain speed and escape surface</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-blue-400 font-bold"><i class="fa-solid fa-droplet mr-2"></i>Condensation (Gas $\rightarrow$ Liquid)</span>
+                            <span class="text-slate-400">Loss of heat causes gas particles to coalesce</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-purple-400 font-bold"><i class="fa-solid fa-bolt mr-2"></i>Sublimation (Solid $\rightarrow$ Gas)</span>
+                            <span class="text-slate-400">Direct transition (e.g., Dry Ice $\text{CO}_2$)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Latent Heat Feature -->
+                <div class="glass-panel p-6 rounded-2xl space-y-4 border-l-4 border-l-amber-500">
+                    <div class="flex items-center space-x-2 text-amber-400 font-mono text-xs font-bold">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>CRITICAL SCIENTIFIC FACT FROM NCERT</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">The Constant Temperature Rule (Latent Heat)</h3>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        When ice melts at $0^\circ\text{C}$ ($273\text{ K}$) or water boils at $100^\circ\text{C}$ ($373\text{ K}$), the temperature <strong>remains completely constant</strong> even as heat is continuously pumped in!
+                    </p>
+                    <div class="p-4 bg-slate-950/70 rounded-xl space-y-3 border border-slate-800 text-xs">
+                        <div class="text-amber-300 font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb"></i> Why does the thermometer stop rising?
+                        </div>
+                        <p class="text-slate-400 leading-relaxed">
+                            Thermal energy no longer increases particle kinetic speed (which is what a thermometer measures). Instead, all incoming energy is consumed as <strong>Latent Heat</strong> to overcome and sever the intermolecular bonds between molecules!
+                        </p>
+                        <div class="p-2 bg-slate-900 rounded-lg text-center font-mono text-cyan-400 text-xs">
+                            $$\text{Latent Heat Energy: } Q = m \cdot L$$
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LAB: INTERACTIVE HEATING CURVE & LATENT HEAT VISUALIZER -->
+            <div class="glass-panel p-6 rounded-3xl space-y-4 border border-teal-500/30">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-mono text-teal-400 font-bold">LAB 02 — HEATING CURVE ANALYZER</span>
+                        <h3 class="text-xl font-bold text-white">Interactive Water Heating Curve & Latent Heat Flatlines</h3>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="addHeatingStep(-1)" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-mono border border-slate-700 transition">
+                            <i class="fa-solid fa-minus mr-1"></i> Remove Heat
+                        </button>
+                        <button onclick="addHeatingStep(1)" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-slate-950 text-xs font-mono border border-cyan-500/40 font-bold transition">
+                            <i class="fa-solid fa-plus mr-1"></i> Add Heat Energy
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Canvas Graph & Readout -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                    <div class="lg:col-span-2 bg-slate-950 p-4 rounded-2xl border border-slate-800 relative">
+                        <canvas id="heating-curve-canvas" width="600" height="260" class="w-full h-64"></canvas>
+                        <div class="absolute top-6 left-6 text-[11px] font-mono text-slate-400 bg-slate-900/80 px-2 py-1 rounded">
+                            Notice the 2 horizontal plateau flatlines where temperature stays constant!
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-2xl space-y-4 border border-slate-700">
+                        <div class="text-xs font-mono text-slate-400">Live Heating Status</div>
+                        <div class="space-y-2 font-mono text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Current Phase:</span>
+                                <span id="heat-phase-val" class="text-cyan-400 font-bold">Solid Ice (-20°C)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Water Temperature:</span>
+                                <span id="heat-temp-val" class="text-white font-bold">-20°C (253 K)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Latent Heat Active:</span>
+                                <span id="heat-latent-val" class="text-slate-500">No (Temp Rising)</span>
+                            </div>
+                        </div>
+                        <div id="heat-explanation" class="p-3 bg-slate-900/90 rounded-xl text-xs text-slate-300 border border-slate-800 leading-relaxed">
+                            Ice is absorbing heat energy. Kinetic vibrations increase, raising temperature from -20°C toward 0°C.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- CHAPTER 3: THE PLANETARY WATER CYCLE                        -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <section id="section-watercycle" class="space-y-6 scroll-mt-24">
+            <div class="flex items-center space-x-3">
+                <span class="px-3 py-1 rounded-lg bg-blue-500/10 text-blue-400 font-mono text-sm font-bold border border-blue-500/20">MODULE 03</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-wide">The Planetary Water Cycle</h2>
+            </div>
+            
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-4xl">
+                Earth's water cycle is a massive global heat engine demonstrating state changes on a planetary scale, powered continuously by solar radiation.
+            </p>
+
+            <!-- Water Cycle Diagram Embed -->
+            <div class="glass-panel p-6 rounded-3xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono text-blue-400 font-bold"><i class="fa-solid fa-image mr-2"></i>SCIENTIFIC REFERENCE DIAGRAM</span>
+                    <span class="text-xs font-mono text-slate-400">Hydrological System & Atmospheric Recirculation</span>
+                </div>
+                <img src="assets/water_cycle_diagram.jpg" alt="Planetary Water Cycle Diagram" class="w-full h-auto diagram-img">
+            </div>
+
+            <!-- LAB 3: RAIN WATER CYCLE INTERACTIVE ACTIVITY (BUILT FROM GIZMO VIDEO) -->
+            <div class="glass-panel p-6 rounded-3xl space-y-4 border border-blue-500/30" id="rain-water-cycle-lab">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-mono text-blue-400 font-bold">LAB 03 — RAIN WATER CYCLE</span>
+                            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono text-[10px] border border-blue-500/30">Journey of a Water Drop</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Interactive Hydrological Journey Simulator</h3>
+                    </div>
+                    
+                    <!-- Activity Toolbar -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="toggle3DBackdropMode()" id="toggle-bg-btn" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-cyan-400 text-xs font-mono border border-slate-700 transition flex items-center gap-1.5" title="Toggle 3D WebGL Background">
+                            <i class="fa-solid fa-layer-group text-blue-400"></i>
+                            <span id="toggle-bg-text">3D Backdrop: Active</span>
+                        </button>
+                        <button onclick="triggerRainCycle()" id="rain-btn" class="px-3.5 py-1.5 rounded-xl bg-blue-500/20 hover:bg-blue-500 text-blue-300 hover:text-slate-950 text-xs font-mono font-bold border border-blue-500/40 transition flex items-center gap-2">
+                            <i class="fa-solid fa-cloud-showers-heavy"></i>
+                            <span id="rain-btn-text">Atmospheric Rainstorm</span>
+                        </button>
+                        <button onclick="loadSampleJourney()" class="px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500 text-purple-300 hover:text-slate-950 text-xs font-mono border border-purple-500/40 transition flex items-center gap-1.5 font-bold" title="Load the 35-step journey from activity record">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            <span>Load Activity Sample Journey</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Activity Deck Container -->
+                <div class="relative w-full rounded-2xl overflow-hidden border border-blue-500/30 shadow-2xl bg-slate-950">
+                    
+                    <!-- Top Navigation Tabs (SIMULATION / PATH) -->
+                    <div class="flex items-center justify-between bg-slate-900/90 border-b border-slate-800 px-4 pt-2">
+                        <div class="flex space-x-2">
+                            <button id="tab-btn-sim" onclick="switchWCTab('sim')" class="px-5 py-2 rounded-t-xl bg-slate-800 text-cyan-400 font-bold text-xs border-t-2 border-t-cyan-400 font-mono flex items-center gap-2 transition">
+                                <i class="fa-solid fa-map-location-dot"></i>
+                                <span>SIMULATION</span>
+                            </button>
+                            <button id="tab-btn-path" onclick="switchWCTab('path')" class="px-5 py-2 rounded-t-xl bg-slate-900/50 text-slate-400 hover:text-white font-bold text-xs font-mono flex items-center gap-2 transition">
+                                <i class="fa-solid fa-timeline"></i>
+                                <span>PATH OF WATER</span>
+                                <span id="path-step-pill" class="px-1.5 py-0.2 rounded-full bg-blue-500/20 text-blue-300 text-[10px]">1 Step</span>
+                            </button>
+                        </div>
+
+                        <!-- Mini Stats Readout -->
+                        <div class="hidden md:flex items-center space-x-4 text-[11px] font-mono pb-1">
+                            <span class="text-slate-400">Current Phase: <strong id="wc-phase-indicator" class="text-cyan-400">Water Vapor</strong></span>
+                            <span class="text-slate-400">Steps: <strong id="wc-step-count" class="text-white">1</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- VIEW 1: SIMULATION VIEWPORT -->
+                    <div id="wc-view-sim" class="relative w-full overflow-hidden" style="height: 600px;">
+                        <!-- 3D Water Cycle Canvas in Background -->
+                        <div id="watercycle-canvas-container" class="absolute inset-0 w-full h-full pointer-events-auto transition-opacity duration-300" style="opacity: 0.85;">
+                            <div class="absolute top-4 left-4 z-10 glass-card px-3.5 py-2 rounded-xl text-xs space-y-1 border border-slate-700/80 pointer-events-none">
+                                <div class="font-bold text-cyan-300 flex items-center gap-1.5 font-mono text-[11px]">
+                                    <i class="fa-solid fa-earth-americas text-blue-400"></i> 3D Hydrological Backdrop
+                                </div>
+                                <div class="grid grid-cols-2 gap-x-3 gap-y-0.5 font-mono text-[10px]">
+                                    <span class="text-slate-400">Solar:</span>
+                                    <span class="text-amber-400 text-right">1361 W/m²</span>
+                                    <span class="text-slate-400">Rain:</span>
+                                    <span id="hud-precip" class="text-slate-300 text-right">Standby</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2D Gizmo Landscape Overlay Layer -->
+                        <div id="gizmo-interactive-layer" class="absolute inset-0 w-full h-full pointer-events-auto transition-opacity duration-300" style="background: rgba(10, 15, 29, 0.45); backdrop-filter: blur(2px);">
+                            <!-- Isometric Landscape Graphic -->
+                            <img src="assets/gizmo_ui_clean.jpg" alt="Water Cycle Landscape" class="absolute inset-0 w-full h-full object-cover select-none pointer-events-none opacity-85">
+
+                            <!-- Interactive Location Markers on Map -->
+                            <div id="map-nodes-container" class="absolute inset-0 w-full h-full pointer-events-auto">
+                                <!-- Populated dynamically by JavaScript -->
+                            </div>
+
+                            <!-- Animated Water Droplet Pin -->
+                            <div id="water-droplet-pin" class="absolute z-30 pointer-events-none transform -translate-x-1/2 -translate-y-1/2 transition-all duration-700 ease-out" style="left: 50%; top: 18%;">
+                                <div class="relative flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-cyan-400/30 animate-ping absolute"></div>
+                                    <div class="w-6 h-6 rounded-full bg-cyan-400/50 animate-pulse absolute"></div>
+                                    <div class="w-5 h-5 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 shadow-lg shadow-cyan-400/80 flex items-center justify-center text-white text-xs border border-white">
+                                        <i class="fa-solid fa-droplet text-[10px]"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Current Location Callout Box (Positioned like the Gizmo in the video) -->
+                            <div id="wc-callout" class="absolute z-30 glass-panel p-4 rounded-2xl border border-cyan-400/50 shadow-2xl max-w-md transition-all duration-500 text-xs space-y-2 left-6 top-6">
+                                <div class="flex items-center justify-between border-b border-slate-700/80 pb-1.5">
+                                    <div class="font-bold text-white flex items-center gap-1.5 text-sm">
+                                        <i class="fa-solid fa-location-dot text-cyan-400"></i>
+                                        <span>Current drop location: <strong id="wc-callout-title" class="text-cyan-300">Atmosphere</strong></span>
+                                    </div>
+                                    <span id="wc-callout-state" class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[10px]">Gas (Vapor)</span>
+                                </div>
+                                <p id="wc-callout-text" class="text-slate-200 leading-relaxed text-xs">
+                                    When liquid water is heated by the sun, it evaporates into the atmosphere. The atmosphere contains about 13,000 cubic kilometers of water (2,100 cubic miles), about 0.001% of the total water on the planet.
+                                </p>
+                            </div>
+
+                            <!-- Right-side Next Destination Action Panel (Matching Gizmo Layout) -->
+                            <div class="absolute right-4 top-4 bottom-4 w-60 glass-panel p-3.5 rounded-2xl border border-slate-700 z-30 flex flex-col justify-between shadow-2xl bg-slate-900/90 backdrop-blur-md">
+                                <div class="space-y-3">
+                                    <div class="text-[11px] font-mono text-cyan-400 font-bold border-b border-slate-800 pb-1.5 flex items-center justify-between">
+                                        <span>Next Destinations:</span>
+                                        <i class="fa-solid fa-arrow-right-long text-slate-500"></i>
+                                    </div>
+                                    <div id="wc-next-buttons" class="flex flex-col gap-2 overflow-y-auto max-h-[380px] pr-1">
+                                        <!-- Rendered dynamically -->
+                                    </div>
+                                </div>
+
+                                <!-- Bottom Simulator Controls -->
+                                <div class="pt-3 border-t border-slate-800 space-y-2">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button onclick="undoWaterCycleStep()" id="wc-btn-back" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono border border-slate-700 transition flex items-center justify-center gap-1">
+                                            <i class="fa-solid fa-rotate-left text-[10px]"></i>
+                                            <span>Back</span>
+                                        </button>
+                                        <button onclick="resetWaterCycleJourney()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-red-500/20 text-red-300 text-xs font-mono border border-slate-700 transition flex items-center justify-center gap-1">
+                                            <i class="fa-solid fa-arrow-rotate-right text-[10px]"></i>
+                                            <span>Reset</span>
+                                        </button>
+                                    </div>
+                                    <button onclick="autoStepWaterCycle()" class="w-full px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-slate-950 text-xs font-mono font-bold transition flex items-center justify-center gap-1 border border-cyan-500/30">
+                                        <i class="fa-solid fa-forward-step text-[10px]"></i>
+                                        <span>Random Next Step</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VIEW 2: PATH OF WATER TAB (MATCHING USER SCREENSHOT) -->
+                    <div id="wc-view-path" class="hidden relative w-full p-6 bg-slate-950 overflow-y-auto" style="height: 600px;">
+                        <div class="max-w-4xl mx-auto space-y-6">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-4 gap-3">
+                                <div>
+                                    <h4 class="text-xl font-bold text-white flex items-center gap-2">
+                                        <i class="fa-solid fa-water text-cyan-400"></i>
+                                        <span>Path of water</span>
+                                    </h4>
+                                    <p class="text-xs text-slate-400 font-mono">Chronological progression of the water droplet through Earth's systems</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="clearPathHistory()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-mono border border-slate-700 transition">
+                                        <i class="fa-solid fa-trash-can mr-1 text-slate-400"></i> Clear Log
+                                    </button>
+                                    <button onclick="loadSampleJourney()" class="px-3 py-1.5 rounded-lg bg-purple-500/20 hover:bg-purple-500 text-xs text-purple-300 hover:text-slate-950 font-mono font-bold border border-purple-500/30 transition">
+                                        <i class="fa-solid fa-file-import mr-1"></i> Preload 35 Steps
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Summary Metrics Bar -->
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
+                                <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-center">
+                                    <div class="text-slate-400 text-[10px]">TOTAL STEPS</div>
+                                    <div id="path-stat-steps" class="text-xl font-bold text-cyan-400">1</div>
+                                </div>
+                                <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-center">
+                                    <div class="text-slate-400 text-[10px]">UNIQUE RESERVOIRS</div>
+                                    <div id="path-stat-unique" class="text-xl font-bold text-emerald-400">1 / 18</div>
+                                </div>
+                                <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-center">
+                                    <div class="text-slate-400 text-[10px]">EVAPORATION CYCLES</div>
+                                    <div id="path-stat-evap" class="text-xl font-bold text-amber-400">0</div>
+                                </div>
+                                <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 text-center">
+                                    <div class="text-slate-400 text-[10px]">PRECIPITATION EVENTS</div>
+                                    <div id="path-stat-precip" class="text-xl font-bold text-blue-400">0</div>
+                                </div>
+                            </div>
+
+                            <!-- The Sequential Table / Path List (Exact format from user image) -->
+                            <div class="bg-slate-900/60 rounded-2xl border border-slate-800 overflow-hidden">
+                                <div class="px-4 py-2.5 bg-slate-900 text-xs font-mono font-bold text-cyan-400 border-b border-slate-800 flex justify-between">
+                                    <span>Recorded Path Sequence</span>
+                                    <span>Physical Mechanism</span>
+                                </div>
+                                <div id="path-table-body" class="divide-y divide-slate-800/80 font-mono text-xs max-h-[340px] overflow-y-auto">
+                                    <!-- Populated dynamically with rows matching user screenshot -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Sequential Stages Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                    <div class="glass-card p-4 rounded-xl space-y-1.5 border-t-2 border-t-amber-400">
+                        <div class="text-[11px] font-mono text-amber-400 font-bold">STAGE 01</div>
+                        <div class="text-sm font-bold text-white">1. Evaporation & Transpiration</div>
+                        <p class="text-xs text-slate-300">Sun heats liquid water in oceans, lakes, and plant leaves, transforming it into invisible water vapor.</p>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl space-y-1.5 border-t-2 border-t-cyan-400">
+                        <div class="text-[11px] font-mono text-cyan-400 font-bold">STAGE 02</div>
+                        <div class="text-sm font-bold text-white">2. Condensation</div>
+                        <p class="text-xs text-slate-300">As vapor ascends into the cool upper atmosphere, it condenses around dust particles to form dense clouds.</p>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl space-y-1.5 border-t-2 border-t-blue-400">
+                        <div class="text-[11px] font-mono text-blue-400 font-bold">STAGE 03</div>
+                        <div class="text-sm font-bold text-white">3. Precipitation</div>
+                        <p class="text-xs text-slate-300">Water droplets inside clouds merge and become heavy, falling back to Earth as rain, snow, sleet, or hail.</p>
+                    </div>
+                    <div class="glass-card p-4 rounded-xl space-y-1.5 border-t-2 border-t-emerald-400">
+                        <div class="text-[11px] font-mono text-emerald-400 font-bold">STAGE 04</div>
+                        <div class="text-sm font-bold text-white">4. Runoff & Collection</div>
+                        <p class="text-xs text-slate-300">Precipitation flows down mountains into streams, rivers, subterranean aquifers, and back to oceans.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- CHAPTER 4: ATOMS, ELEMENTS & THE PERIODIC TABLE             -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <section id="section-atoms" class="space-y-6 scroll-mt-24">
+            <div class="flex items-center space-x-3">
+                <span class="px-3 py-1 rounded-lg bg-purple-500/10 text-purple-400 font-mono text-sm font-bold border border-purple-500/20">MODULE 04</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-wide">Atoms, Elements & The Periodic Table</h2>
+            </div>
+            
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-4xl">
+                An <strong>atom</strong> is the smallest fundamental unit of matter. An <strong>element</strong> is a pure substance consisting of only one type of atom that cannot be broken down by ordinary chemical means.
+            </p>
+
+            <!-- Atomic Diagram Embed -->
+            <div class="glass-panel p-6 rounded-3xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono text-purple-400 font-bold"><i class="fa-solid fa-image mr-2"></i>SCIENTIFIC REFERENCE INFOGRAPHIC</span>
+                    <span class="text-xs font-mono text-slate-400">Subatomic Particles, Nucleus & Electron Energy Shells</span>
+                </div>
+                <img src="assets/atom_structure_diagram.jpg" alt="Atomic Structure Diagram" class="w-full h-auto diagram-img">
+            </div>
+
+            <!-- Theory + 3D Atomic Forge -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Particle Architecture List -->
+                <div class="glass-panel p-6 rounded-2xl space-y-4 lg:col-span-1">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-atom text-purple-400"></i>
+                        <span>Anatomy of an Atom</span>
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Every atom contains three fundamental subatomic particles:
+                    </p>
+
+                    <div class="space-y-2 text-xs font-mono">
+                        <div class="p-3 bg-red-950/40 border border-red-500/30 rounded-xl text-red-300 flex justify-between items-center">
+                            <span><i class="fa-solid fa-circle-plus text-red-400 mr-2"></i>Protons ($p^+$)</span>
+                            <span>+1 Charge (Nucleus)</span>
+                        </div>
+                        <div class="p-3 bg-slate-800/80 border border-slate-700 rounded-xl text-slate-300 flex justify-between items-center">
+                            <span><i class="fa-solid fa-circle text-slate-400 mr-2"></i>Neutrons ($n^0$)</span>
+                            <span>0 Neutral (Nucleus)</span>
+                        </div>
+                        <div class="p-3 bg-cyan-950/40 border border-cyan-500/30 rounded-xl text-cyan-300 flex justify-between items-center">
+                            <span><i class="fa-solid fa-circle-minus text-cyan-400 mr-2"></i>Electrons ($e^-$)</span>
+                            <span>-1 Charge (Energy Shells)</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-900/90 rounded-xl border border-slate-800 text-xs space-y-2 text-slate-300">
+                        <div><strong class="text-purple-400">Atomic Number ($Z$):</strong> Total number of protons. Determines the element's unique identity!</div>
+                        <div><strong class="text-purple-400">Electrons in Shells:</strong> 1st shell holds up to 2, 2nd shell holds up to 8.</div>
+                    </div>
+                </div>
+
+                <!-- LAB 4: 3D ATOMIC ORBITAL FORGE -->
+                <div id="lab-3" class="glass-panel p-6 rounded-3xl space-y-4 lg:col-span-2 border border-purple-500/30">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <span class="text-xs font-mono text-purple-400 font-bold">LAB 04 — 3D ATOMIC FORGE</span>
+                            <h3 class="text-xl font-bold text-white">Interactive 3D Bohr Atomic Structure</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="renderAtomModel('H')" class="px-3 py-1.5 bg-slate-800 hover:bg-purple-500/20 text-xs text-purple-300 rounded-lg border border-slate-700 font-mono font-bold transition">Hydrogen (H)</button>
+                            <button onclick="renderAtomModel('C')" class="px-3 py-1.5 bg-slate-800 hover:bg-purple-500/20 text-xs text-purple-300 rounded-lg border border-slate-700 font-mono font-bold transition">Carbon (C)</button>
+                            <button onclick="renderAtomModel('O')" class="px-3 py-1.5 bg-slate-800 hover:bg-purple-500/20 text-xs text-purple-300 rounded-lg border border-slate-700 font-mono font-bold transition">Oxygen (O)</button>
+                        </div>
+                    </div>
+
+                    <!-- Visualizer Canvas -->
+                    <div class="sim-container" id="atom-canvas-container">
+                        <div class="absolute top-4 left-4 z-10 glass-card px-4 py-2.5 rounded-xl text-xs space-y-1 border border-slate-700">
+                            <div class="text-slate-400">Active Element: <span id="atom-name-display" class="font-bold text-purple-400 font-mono">Hydrogen Atom (H)</span></div>
+                            <div class="text-[11px] text-cyan-300 font-mono" id="atom-detail-display">Atomic Number: 1 | Protons: 1 | Neutrons: 0 | Electrons: 1</div>
+                        </div>
+                    </div>
+
+                    <!-- NCERT Periodic Table Element Cards Deck -->
+                    <div class="space-y-2 pt-2">
+                        <div class="text-xs font-mono text-slate-400">NCERT Grade 6 Periodic Cards:</div>
+                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                            <div onclick="renderAtomModel('H')" class="cursor-pointer glass-card p-2.5 rounded-xl text-center border-t-2 border-t-cyan-400 hover:border-cyan-400 transition">
+                                <div class="text-[10px] font-mono text-slate-400">1</div>
+                                <div class="text-xl font-bold text-cyan-400">H</div>
+                                <div class="text-[10px] text-slate-300">Hydrogen</div>
+                                <div class="text-[9px] font-mono text-slate-500">1.008</div>
+                            </div>
+                            <div onclick="renderAtomModel('C')" class="cursor-pointer glass-card p-2.5 rounded-xl text-center border-t-2 border-t-purple-400 hover:border-purple-400 transition">
+                                <div class="text-[10px] font-mono text-slate-400">6</div>
+                                <div class="text-xl font-bold text-purple-400">C</div>
+                                <div class="text-[10px] text-slate-300">Carbon</div>
+                                <div class="text-[9px] font-mono text-slate-500">12.011</div>
+                            </div>
+                            <div onclick="renderAtomModel('O')" class="cursor-pointer glass-card p-2.5 rounded-xl text-center border-t-2 border-t-red-400 hover:border-red-400 transition">
+                                <div class="text-[10px] font-mono text-slate-400">8</div>
+                                <div class="text-xl font-bold text-red-400">O</div>
+                                <div class="text-[10px] text-slate-300">Oxygen</div>
+                                <div class="text-[9px] font-mono text-slate-500">15.999</div>
+                            </div>
+                            <div class="glass-card p-2.5 rounded-xl text-center border-t-2 border-t-amber-400">
+                                <div class="text-[10px] font-mono text-slate-400">11</div>
+                                <div class="text-xl font-bold text-amber-400">Na</div>
+                                <div class="text-[10px] text-slate-300">Sodium</div>
+                                <div class="text-[9px] font-mono text-slate-500">22.990</div>
+                            </div>
+                            <div class="glass-card p-2.5 rounded-xl text-center border-t-2 border-t-emerald-400">
+                                <div class="text-[10px] font-mono text-slate-400">17</div>
+                                <div class="text-xl font-bold text-emerald-400">Cl</div>
+                                <div class="text-[10px] text-slate-300">Chlorine</div>
+                                <div class="text-[9px] font-mono text-slate-500">35.453</div>
+                            </div>
+                            <div class="glass-card p-2.5 rounded-xl text-center border-t-2 border-t-orange-400">
+                                <div class="text-[10px] font-mono text-slate-400">26</div>
+                                <div class="text-xl font-bold text-orange-400">Fe</div>
+                                <div class="text-[10px] text-slate-300">Iron</div>
+                                <div class="text-[9px] font-mono text-slate-500">55.845</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- CHAPTER 5: COMPOUNDS, FORMULAE & MIXTURES                   -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <section id="section-compounds" class="space-y-6 scroll-mt-24">
+            <div class="flex items-center space-x-3">
+                <span class="px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 font-mono text-sm font-bold border border-emerald-500/20">MODULE 05</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-wide">Compounds, Formulae & Mixtures</h2>
+            </div>
+            
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-4xl">
+                Matter combines chemically or physically. Understanding the boundary between compounds and mixtures is fundamental to all science.
+            </p>
+
+            <!-- Compounds vs Mixtures Diagram Embed -->
+            <div class="glass-panel p-6 rounded-3xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono text-emerald-400 font-bold"><i class="fa-solid fa-image mr-2"></i>SCIENTIFIC REFERENCE INFOGRAPHIC</span>
+                    <span class="text-xs font-mono text-slate-400">Chemical Bonding vs Physical Separation</span>
+                </div>
+                <img src="assets/compounds_mixtures_diagram.jpg" alt="Compounds vs Mixtures Diagram" class="w-full h-auto diagram-img">
+            </div>
+
+            <!-- NCERT Diagnostic Matrix Comparison Table -->
+            <div class="glass-panel p-6 rounded-3xl space-y-6 border border-emerald-500/30">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-table-cells text-emerald-400"></i>
+                    <span>NCERT Diagnostic Matrix: Chemical Compounds vs. Physical Mixtures</span>
+                </h3>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-900/90 text-xs font-mono text-cyan-400 border-b border-slate-700">
+                            <tr>
+                                <th class="p-3.5">Feature Profile</th>
+                                <th class="p-3.5 text-emerald-400">Chemical Compound</th>
+                                <th class="p-3.5 text-amber-400">Physical Mixture</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 text-slate-300 text-xs sm:text-sm">
+                            <tr>
+                                <td class="p-3.5 font-semibold text-white">Composition</td>
+                                <td class="p-3.5">Elements combined in a <strong>strict fixed ratio</strong> by mass (e.g. $\text{H}_2\text{O}$ is always 2:1).</td>
+                                <td class="p-3.5">Substances mixed in <strong>any arbitrary proportion</strong> (e.g. more or less sugar in water).</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-semibold text-white">Chemical Properties</td>
+                                <td class="p-3.5">Properties are <strong>completely new & distinct</strong> from parent elements. (Hydrogen is explosive gas and Oxygen fuels fire, but Water puts out fire!).</td>
+                                <td class="p-3.5">Components <strong>retain their original individual properties</strong> (Iron remains magnetic, Sand remains gritty).</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-semibold text-white">Bonding & Energy</td>
+                                <td class="p-3.5">Chemical bonds formed; energy (heat/light) usually absorbed or released during synthesis.</td>
+                                <td class="p-3.5">No chemical bonds formed; no chemical energy exchange during simple physical mixing.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-semibold text-white">Separation Method</td>
+                                <td class="p-3.5">Requires <strong>chemical reactions or electrolysis</strong> to split apart.</td>
+                                <td class="p-3.5">Easily separated by <strong>physical methods</strong>: magnets, filtration, evaporation, sieving.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3.5 font-semibold text-white">Examples</td>
+                                <td class="p-3.5 font-mono text-emerald-300">Pure Water ($\text{H}_2\text{O}$), Carbon Dioxide ($\text{CO}_2$), Table Salt ($\text{NaCl}$)</td>
+                                <td class="p-3.5 font-mono text-amber-300">Air, Iron filings + Sand, Saltwater, Soil, Muddy water</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- LAB 5: 3D MOLECULAR SYNTHESIZER -->
+                <div class="bg-slate-900/70 p-6 rounded-2xl border border-slate-800 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <span class="text-xs font-mono text-cyan-400 font-bold">LAB 05A — 3D MOLECULAR SYNTHESIZER</span>
+                            <h4 class="text-base font-bold text-white">Chemical Compound Molecular Architecture</h4>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="renderMoleculeModel('H2O')" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-slate-950 text-xs font-mono font-bold transition border border-cyan-500/40">
+                                Water ($\text{H}_2\text{O}$)
+                            </button>
+                            <button onclick="renderMoleculeModel('CO2')" class="px-3 py-1.5 rounded-lg bg-purple-500/20 hover:bg-purple-500 text-purple-300 hover:text-slate-950 text-xs font-mono font-bold transition border border-purple-500/40">
+                                Carbon Dioxide ($\text{CO}_2$)
+                            </button>
+                            <button onclick="renderMoleculeModel('NaCl')" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 text-xs font-mono font-bold transition border border-emerald-500/40">
+                                Table Salt ($\text{NaCl}$)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-950/80 rounded-xl border border-slate-800 text-xs font-mono text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>Target Compound: <span id="compound-target" class="text-cyan-400 font-bold">Water Molecule (H₂O)</span></div>
+                        <div id="compound-spec" class="text-slate-400">Formula: H₂O | Bonding: Polar Covalent | Ratio: 2 H : 1 O</div>
+                    </div>
+                </div>
+
+                <!-- LAB 5B: INTERACTIVE PHYSICAL SEPARATION WORKBENCH -->
+                <div class="bg-slate-900/70 p-6 rounded-2xl border border-slate-800 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <span class="text-xs font-mono text-amber-400 font-bold">LAB 05B — PHYSICAL SEPARATION LAB</span>
+                            <h4 class="text-base font-bold text-white">Separating Mixtures: Magnetism, Filtration, & Evaporation</h4>
+                        </div>
+                        <span class="text-xs font-mono text-slate-400">Drag magnet slider to extract iron filings from sand</span>
+                    </div>
+
+                    <!-- Magnetism Tool -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-mono">
+                            <span class="text-slate-400">Magnetic Field Intensity ($B$):</span>
+                            <span id="magnet-power-val" class="text-amber-400 font-bold">0%</span>
+                        </div>
+                        <input type="range" id="magnet-slider" min="0" max="100" value="0" class="w-full">
+                    </div>
+
+                    <!-- Separation Visual Stage -->
+                    <div class="h-36 rounded-xl bg-slate-950 relative overflow-hidden border border-slate-800 flex items-center justify-center" id="separation-canvas-container">
+                        <div id="separation-stage" class="relative w-full h-full p-4 flex items-center justify-around">
+                            <!-- Sand particles -->
+                            <div class="text-center">
+                                <i class="fa-solid fa-mountain text-amber-600/70 text-4xl mb-1"></i>
+                                <div class="text-[11px] font-mono text-amber-400 font-bold">Sand Grains</div>
+                                <div class="text-[9px] text-slate-400">Non-magnetic $\text{SiO}_2$</div>
+                            </div>
+                            <!-- Virtual Magnet -->
+                            <div id="virtual-magnet" class="w-16 h-16 rounded-xl bg-gradient-to-b from-red-600 to-red-800 border-2 border-slate-200 flex flex-col items-center justify-center text-white font-bold text-sm shadow-lg shadow-red-600/30 transition-all duration-300">
+                                <span>N</span>
+                                <div class="w-full h-0.5 bg-white/40 my-0.5"></div>
+                                <span>S</span>
+                            </div>
+                            <!-- Iron Filings -->
+                            <div id="iron-filings" class="text-center transition-all duration-500">
+                                <i class="fa-solid fa-circle-nodes text-slate-300 text-3xl mb-1"></i>
+                                <div class="text-[11px] font-mono text-slate-200 font-bold">Iron Filings</div>
+                                <div class="text-[9px] text-slate-400">Ferromagnetic ($\text{Fe}$)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Physical Separation Methods Reference -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
+                        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800">
+                            <strong class="text-amber-400 block mb-1">1. Magnetic Separation:</strong>
+                            <p class="text-slate-400">Extracts magnetic materials like Iron ($\text{Fe}$) from non-magnetic sand or sulfur without any chemical change.</p>
+                        </div>
+                        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800">
+                            <strong class="text-cyan-400 block mb-1">2. Filtration:</strong>
+                            <p class="text-slate-400">Separates insoluble solid particles (e.g. sand or tea leaves) from a liquid through porous filter paper.</p>
+                        </div>
+                        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800">
+                            <strong class="text-teal-400 block mb-1">3. Evaporation:</strong>
+                            <p class="text-slate-400">Heats a solution (e.g. saltwater) so the liquid evaporates as vapor, leaving pure salt crystals behind.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- CHAPTER 6: KNOWLEDGE CHECK & MASTERY EVALUATION              -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <section id="section-quiz" class="space-y-6 scroll-mt-24">
+            <div class="flex items-center space-x-3">
+                <span class="px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 font-mono text-sm font-bold border border-amber-500/20">EVALUATION</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-wide">Interactive Mastery Evaluation</h2>
+            </div>
+            
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-4xl">
+                Test your mastery of NCERT Grade 6 Materials & Structure. Instant inline scientific feedback is provided for every question—no popup dialogs or modals.
+            </p>
+
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl space-y-6 border border-amber-500/30">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div>
+                        <div class="text-xs font-mono text-amber-400 font-bold">GRADE 6 RIGOROUS ASSESSMENT</div>
+                        <div class="text-lg font-bold text-white">Materials & Structure Comprehensive Exam</div>
+                    </div>
+                    <div class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 font-mono text-sm">
+                        Score: <span id="quiz-score" class="text-amber-400 font-bold">0</span> / 6
+                    </div>
+                </div>
+
+                <div id="quiz-container" class="space-y-8">
+                    <!-- Q1 -->
+                    <div class="space-y-3 p-4 bg-slate-900/60 rounded-2xl border border-slate-800" id="q-block-1">
+                        <p class="text-sm font-semibold text-slate-200">1. Why does pure water retain a completely constant temperature (100°C) while boiling vigorously?</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <button onclick="checkAnswer(this, false, 'q1', 'Incorrect. Boiling requires continuous heat energy input.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">A. The heat source automatically shuts off during boiling.</button>
+                            <button onclick="checkAnswer(this, true, 'q1', 'Correct! Latent heat of vaporization is consumed to sever intermolecular attractive bonds rather than accelerating kinetic temperature.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">B. Added energy is consumed as Latent Heat to break intermolecular bonds.</button>
+                            <button onclick="checkAnswer(this, false, 'q1', 'Incorrect. Energy is conserved and cannot be destroyed.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">C. Liquid water destroys heat energy upon boiling.</button>
+                            <button onclick="checkAnswer(this, false, 'q1', 'Incorrect. Atmospheric pressure sets the boiling point, but latent heat keeps the temperature flat.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">D. Atmospheric pressure stops all temperature changes.</button>
+                        </div>
+                        <div id="feedback-q1" class="text-xs font-mono hidden p-3 rounded-xl"></div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="space-y-3 p-4 bg-slate-900/60 rounded-2xl border border-slate-800" id="q-block-2">
+                        <p class="text-sm font-semibold text-slate-200">2. Which statement accurately describes particles in the solid state?</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <button onclick="checkAnswer(this, false, 'q2', 'Incorrect. High kinetic energy and rapid straight-line motion describe gas particles.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">A. High kinetic energy, spaced far apart with no fixed volume.</button>
+                            <button onclick="checkAnswer(this, true, 'q2', 'Correct! Solid particles are tightly held in fixed positions by strong intermolecular forces, merely vibrating.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">B. Tightly packed in a regular crystal lattice, vibrating in fixed positions.</button>
+                            <button onclick="checkAnswer(this, false, 'q2', 'Incorrect. Sliding past one another while maintaining fixed volume describes liquids.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">C. Close together and continuously sliding freely past one another.</button>
+                            <button onclick="checkAnswer(this, false, 'q2', 'Incorrect. Solids have definite fixed shapes.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">D. Particles freely adapt to fill the entire shape of any container.</button>
+                        </div>
+                        <div id="feedback-q2" class="text-xs font-mono hidden p-3 rounded-xl"></div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="space-y-3 p-4 bg-slate-900/60 rounded-2xl border border-slate-800" id="q-block-3">
+                        <p class="text-sm font-semibold text-slate-200">3. In the planetary water cycle, what stage occurs when ascending water vapor cools and transforms into clouds?</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <button onclick="checkAnswer(this, false, 'q3', 'Incorrect. Evaporation is liquid water turning into vapor.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">A. Evaporation</button>
+                            <button onclick="checkAnswer(this, false, 'q3', 'Incorrect. Precipitation is rain or snow falling to the ground.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">B. Precipitation</button>
+                            <button onclick="checkAnswer(this, true, 'q3', 'Correct! Condensation is the gas-to-liquid phase transition where cool vapor forms cloud droplets.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">C. Condensation</button>
+                            <button onclick="checkAnswer(this, false, 'q3', 'Incorrect. Surface runoff is water streaming across land toward rivers.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">D. Surface Runoff</button>
+                        </div>
+                        <div id="feedback-q3" class="text-xs font-mono hidden p-3 rounded-xl"></div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="space-y-3 p-4 bg-slate-900/60 rounded-2xl border border-slate-800" id="q-block-4">
+                        <p class="text-sm font-semibold text-slate-200">4. Which subatomic particles reside within the dense central nucleus of an atom?</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <button onclick="checkAnswer(this, false, 'q4', 'Incorrect. Electrons orbit in outer shells.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">A. Protons and Electrons</button>
+                            <button onclick="checkAnswer(this, true, 'q4', 'Correct! Protons (+ charge) and Neutrons (neutral) make up the atomic nucleus.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">B. Protons and Neutrons</button>
+                            <button onclick="checkAnswer(this, false, 'q4', 'Incorrect. Electrons are not in the nucleus.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">C. Neutrons and Electrons only</button>
+                            <button onclick="checkAnswer(this, false, 'q4', 'Incorrect. Electrons orbit outside the nucleus in concentric energy levels.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">D. Electrons only</button>
+                        </div>
+                        <div id="feedback-q4" class="text-xs font-mono hidden p-3 rounded-xl"></div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="space-y-3 p-4 bg-slate-900/60 rounded-2xl border border-slate-800" id="q-block-5">
+                        <p class="text-sm font-semibold text-slate-200">5. How does a chemical compound differ fundamentally from a physical mixture?</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <button onclick="checkAnswer(this, false, 'q5', 'Incorrect. Mixtures can be mixed in any arbitrary ratio.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">A. Mixtures must always combine in strict, fixed mass ratios.</button>
+                            <button onclick="checkAnswer(this, true, 'q5', 'Correct! Compounds feature chemically bonded elements in fixed ratios with totally new properties, while mixtures retain original component traits.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">B. Compounds have chemically bonded elements with new properties; mixtures retain component properties.</button>
+                            <button onclick="checkAnswer(this, false, 'q5', 'Incorrect. Compounds cannot be separated by simple bar magnets or filters.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">C. Compounds can be easily separated using a simple household magnet or filter paper.</button>
+                            <button onclick="checkAnswer(this, false, 'q5', 'Incorrect. Both contain atoms, but bonding distinguishes them.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">D. Compounds do not contain atoms of chemical elements.</button>
+                        </div>
+                        <div id="feedback-q5" class="text-xs font-mono hidden p-3 rounded-xl"></div>
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="space-y-3 p-4 bg-slate-900/60 rounded-2xl border border-slate-800" id="q-block-6">
+                        <p class="text-sm font-semibold text-slate-200">6. Which physical separation method would best separate iron filings from yellow sulfur powder or sand?</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <button onclick="checkAnswer(this, true, 'q6', 'Correct! Iron is ferromagnetic and clings to the magnet, leaving non-magnetic sulfur/sand behind.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">A. Magnetic Separation (using a magnet)</button>
+                            <button onclick="checkAnswer(this, false, 'q6', 'Incorrect. Both are dry powders that would sit on the filter.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">B. Filtration with filter paper</button>
+                            <button onclick="checkAnswer(this, false, 'q6', 'Incorrect. Neither iron nor sulfur is a liquid solvent to evaporate.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">C. Thermal Evaporation</button>
+                            <button onclick="checkAnswer(this, false, 'q6', 'Incorrect. Sublimation applies to substances like dry ice or ammonium chloride.')" class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700 text-left hover:border-cyan-500 transition">D. Sublimation</button>
+                        </div>
+                        <div id="feedback-q6" class="text-xs font-mono hidden p-3 rounded-xl"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- FOOTER                                                      -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-10 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="text-slate-400 font-semibold">NCERT Grade 6 Science Interactive Educational Experience — Materials and Their Structure</p>
+            <p class="font-mono text-[11px] text-slate-500">Curriculum-aligned physics & chemistry • WebGL 3D Engines • Zero Modals Architecture</p>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- JAVASCRIPT SCIENTIFIC SIMULATION ENGINE                     -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <script>
+        /* --------------------------------------------------
+           AUDIO SYNTHESIS ENGINE (Web Audio API)
+        -------------------------------------------------- */
+        let audioCtx = null;
+        let soundEnabled = false;
+
+        function toggleAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-cyan-400";
+                playTone(620, 0.1);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-400";
+            }
+        }
+
+        function playTone(freq, duration) {
+            if (!soundEnabled || !audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        /* --------------------------------------------------
+           LAB 1: THREE.JS 3D PARTICLE CRUCIBLE
+        -------------------------------------------------- */
+        let pScene, pCamera, pRenderer, pParticles = [];
+        let pTemp = 100;
+        const PARTICLE_COUNT = 125;
+        const BOX_SIZE = 12;
+
+        function initParticleLab() {
+            const container = document.getElementById('particle-canvas-container');
+            if (!container) return;
+            const width = container.clientWidth || 800;
+            const height = container.clientHeight || 480;
+
+            pScene = new THREE.Scene();
+            pCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+            pCamera.position.set(0, 15, 25);
+            pCamera.lookAt(0, 0, 0);
+
+            pRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            pRenderer.setSize(width, height);
+            pRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(pRenderer.domElement);
+
+            const controls = new THREE.OrbitControls(pCamera, pRenderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            pScene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0x00f3ff, 1.5, 60);
+            pointLight.position.set(10, 20, 10);
+            pScene.add(pointLight);
+
+            // Container Box Wireframe
+            const boxGeo = new THREE.BoxGeometry(BOX_SIZE, BOX_SIZE, BOX_SIZE);
+            const boxMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true, transparent: true, opacity: 0.25 });
+            const boxMesh = new THREE.Mesh(boxGeo, boxMat);
+            pScene.add(boxMesh);
+
+            // Spherical Particles
+            const particleGeo = new THREE.SphereGeometry(0.38, 16, 16);
+
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const mat = new THREE.MeshStandardMaterial({
+                    color: 0x00f3ff,
+                    roughness: 0.2,
+                    metalness: 0.8
+                });
+                const p = new THREE.Mesh(particleGeo, mat);
+                
+                const row = Math.floor(i / 25);
+                const col = Math.floor((i % 25) / 5);
+                const depth = i % 5;
+                
+                p.userData = {
+                    homePos: new THREE.Vector3(
+                        (col - 2) * 1.5,
+                        (row - 2) * 1.5 - 2,
+                        (depth - 2) * 1.5
+                    ),
+                    vel: new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.12,
+                        (Math.random() - 0.5) * 0.12,
+                        (Math.random() - 0.5) * 0.12
+                    )
+                };
+                p.position.copy(p.userData.homePos);
+                pParticles.push(p);
+                pScene.add(p);
+            }
+
+            const slider = document.getElementById('temp-slider');
+            slider.addEventListener('input', (e) => {
+                pTemp = parseFloat(e.target.value);
+                updateParticleHUD();
+            });
+
+            animateParticleLab();
+        }
+
+        function setPhasePreset(temp) {
+            pTemp = temp;
+            const slider = document.getElementById('temp-slider');
+            if (slider) slider.value = temp;
+            updateParticleHUD();
+            playTone(350 + temp * 0.8, 0.15);
+        }
+
+        function onMaterialChange() {
+            const mat = document.getElementById('material-select').value;
+            if (mat === 'neon') {
+                setPhasePreset(25);
+            } else if (mat === 'argon') {
+                setPhasePreset(85);
+            } else {
+                setPhasePreset(300);
+            }
+        }
+
+        function updateParticleHUD() {
+            document.getElementById('temp-slider-val').innerText = `${pTemp} K`;
+            document.getElementById('hud-temp').innerText = `${pTemp} K (${pTemp - 273}°C)`;
+
+            const badge = document.getElementById('phase-badge');
+            const keDisplay = document.getElementById('hud-ke');
+            const pressDisplay = document.getElementById('hud-pressure');
+
+            if (pTemp < 273) {
+                badge.innerText = "Solid Crystal Lattice";
+                badge.className = "font-bold text-cyan-400 uppercase";
+                keDisplay.innerText = "Low (Vibrational in place)";
+                pressDisplay.innerText = "0.1 atm";
+            } else if (pTemp >= 273 && pTemp < 373) {
+                badge.innerText = "Liquid Fluid";
+                badge.className = "font-bold text-teal-400 uppercase";
+                keDisplay.innerText = "Moderate (Free to slide)";
+                pressDisplay.innerText = "1.0 atm";
+            } else {
+                badge.innerText = "Gaseous Vapors";
+                badge.className = "font-bold text-purple-400 uppercase";
+                keDisplay.innerText = "High (Rapid straight-line flight)";
+                pressDisplay.innerText = `${(1 + (pTemp - 373) * 0.02).toFixed(1)} atm`;
+            }
+        }
+
+        function animateParticleLab() {
+            requestAnimationFrame(animateParticleLab);
+
+            const speedFactor = pTemp / 200;
+
+            pParticles.forEach(p => {
+                if (pTemp < 273) {
+                    // Solid State
+                    const jitter = (pTemp / 273) * 0.18;
+                    p.position.x = p.userData.homePos.x + (Math.random() - 0.5) * jitter;
+                    p.position.y = p.userData.homePos.y + (Math.random() - 0.5) * jitter;
+                    p.position.z = p.userData.homePos.z + (Math.random() - 0.5) * jitter;
+                    p.material.color.setHex(0x00f3ff);
+                } else if (pTemp >= 273 && pTemp < 373) {
+                    // Liquid State
+                    p.position.addScaledVector(p.userData.vel, speedFactor);
+                    p.userData.vel.y -= 0.008; // Gravity pulling liquid downward
+
+                    const boundary = BOX_SIZE / 2 - 0.4;
+                    if (Math.abs(p.position.x) > boundary) p.userData.vel.x *= -1;
+                    if (p.position.y < -boundary) {
+                        p.position.y = -boundary;
+                        p.userData.vel.y *= -0.4;
+                    }
+                    if (Math.abs(p.position.z) > boundary) p.userData.vel.z *= -1;
+                    p.material.color.setHex(0x14b8a6);
+                } else {
+                    // Gas State
+                    p.position.addScaledVector(p.userData.vel, speedFactor * 1.6);
+                    const boundary = BOX_SIZE / 2 - 0.4;
+
+                    if (Math.abs(p.position.x) > boundary) { p.userData.vel.x *= -1; p.position.x = Math.sign(p.position.x) * boundary; }
+                    if (Math.abs(p.position.y) > boundary) { p.userData.vel.y *= -1; p.position.y = Math.sign(p.position.y) * boundary; }
+                    if (Math.abs(p.position.z) > boundary) { p.userData.vel.z *= -1; p.position.z = Math.sign(p.position.z) * boundary; }
+                    p.material.color.setHex(0xa855f7);
+                }
+            });
+
+            if (pRenderer && pScene && pCamera) {
+                pRenderer.render(pScene, pCamera);
+            }
+        }
+
+        /* --------------------------------------------------
+           AI WEBCAM HAND TRACKING THERMAL CONTROLLER
+           Controls particle crucible temperature (10 K - 500 K) via hand gestures
+        -------------------------------------------------- */
+        let webcamActive = false;
+        let webcamStream = null;
+        let mpHands = null;
+        let mpCamera = null;
+        let isMirrored = true;
+        let gestureMode = 'vertical'; // 'vertical' (height) or 'horizontal' (sweep)
+        let smoothedTemp = 100;
+        let lastPhaseSound = 'solid';
+        let fallbackAnimationId = null;
+
+        function setGestureMode(mode) {
+            gestureMode = mode;
+            const vertBtn = document.getElementById('mode-vertical-btn');
+            const horizBtn = document.getElementById('mode-horizontal-btn');
+            const modeLabel = document.getElementById('pip-mode-label');
+            const instruction = document.getElementById('pip-instruction');
+
+            if (mode === 'vertical') {
+                if (vertBtn) vertBtn.className = "px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[11px] font-bold";
+                if (horizBtn) horizBtn.className = "px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[11px]";
+                if (modeLabel) modeLabel.innerText = "Vertical Mode";
+                if (instruction) instruction.innerText = "⬆️ Raise: Heat | ⬇️ Lower: Cool";
+            } else {
+                if (horizBtn) horizBtn.className = "px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[11px] font-bold";
+                if (vertBtn) vertBtn.className = "px-2 py-0.5 rounded text-slate-400 hover:text-slate-200 text-[11px]";
+                if (modeLabel) modeLabel.innerText = "Horizontal Mode";
+                if (instruction) instruction.innerText = "⬅️ Left: Cool | ➡️ Right: Heat";
+            }
+        }
+
+        function toggleWebcamMirror() {
+            isMirrored = !isMirrored;
+            const canvas = document.getElementById('webcam-canvas');
+            if (canvas) {
+                canvas.style.transform = isMirrored ? "scaleX(-1)" : "none";
+            }
+        }
+
+        async function toggleWebcamHandTracking() {
+            if (webcamActive) {
+                stopWebcam();
+            } else {
+                await startWebcam();
+            }
+        }
+
+        async function startWebcam() {
+            const toggleBtn = document.getElementById('webcam-toggle-btn');
+            const btnIcon = document.getElementById('webcam-btn-icon');
+            const btnText = document.getElementById('webcam-btn-text');
+            const statusPill = document.getElementById('webcam-status-pill');
+            const statusText = document.getElementById('webcam-status-text');
+            const modeContainer = document.getElementById('webcam-mode-container');
+            const pipHud = document.getElementById('webcam-hud-pip');
+            const video = document.getElementById('webcam-video');
+
+            try {
+                if (btnText) btnText.innerText = "Starting Camera...";
+                if (btnIcon) btnIcon.className = "fa-solid fa-spinner fa-spin";
+
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 320 },
+                        height: { ideal: 240 },
+                        facingMode: "user"
+                    },
+                    audio: false
+                });
+
+                webcamStream = stream;
+                video.srcObject = stream;
+                await video.play();
+
+                webcamActive = true;
+                if (pipHud) pipHud.classList.remove('hidden');
+                if (statusPill) {
+                    statusPill.classList.remove('hidden');
+                    statusPill.classList.add('flex');
+                }
+                if (modeContainer) {
+                    modeContainer.classList.remove('hidden');
+                    modeContainer.classList.add('flex');
+                }
+
+                if (toggleBtn) {
+                    toggleBtn.className = "px-4 py-2.5 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white rounded-xl text-xs font-bold font-mono shadow-lg shadow-rose-500/25 flex items-center space-x-2 transition transform active:scale-95 border border-rose-400/40";
+                }
+                if (btnIcon) btnIcon.className = "fa-solid fa-video-slash";
+                if (btnText) btnText.innerText = "Stop Hand Tracking";
+                if (statusText) statusText.innerText = "Camera Active";
+
+                // Initialize MediaPipe Hands if available
+                if (typeof window.Hands !== 'undefined') {
+                    initMediaPipe(video);
+                } else {
+                    console.log("MediaPipe library not detected, engaging intelligent motion fallback");
+                    startOpticalMotionTracking(video);
+                }
+
+                playTone(520, 0.2);
+            } catch (err) {
+                console.error("Camera access failed:", err);
+                alert("Camera access denied or unavailable. Please ensure camera permissions are allowed in your browser to use Hand Gesture Temperature Control.");
+                stopWebcam();
+            }
+        }
+
+        function stopWebcam() {
+            webcamActive = false;
+            if (webcamStream) {
+                webcamStream.getTracks().forEach(track => track.stop());
+                webcamStream = null;
+            }
+            if (mpCamera) {
+                try { mpCamera.stop(); } catch(e){}
+                mpCamera = null;
+            }
+            if (fallbackAnimationId) {
+                cancelAnimationFrame(fallbackAnimationId);
+                fallbackAnimationId = null;
+            }
+
+            const toggleBtn = document.getElementById('webcam-toggle-btn');
+            const btnIcon = document.getElementById('webcam-btn-icon');
+            const btnText = document.getElementById('webcam-btn-text');
+            const statusPill = document.getElementById('webcam-status-pill');
+            const modeContainer = document.getElementById('webcam-mode-container');
+            const pipHud = document.getElementById('webcam-hud-pip');
+
+            if (pipHud) pipHud.classList.add('hidden');
+            if (statusPill) { statusPill.classList.add('hidden'); statusPill.classList.remove('flex'); }
+            if (modeContainer) { modeContainer.classList.add('hidden'); modeContainer.classList.remove('flex'); }
+
+            if (toggleBtn) {
+                toggleBtn.className = "px-4 py-2.5 bg-gradient-to-r from-cyan-600 via-teal-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-xs font-bold font-mono shadow-lg shadow-cyan-500/25 flex items-center space-x-2 transition transform active:scale-95 border border-cyan-400/40";
+            }
+            if (btnIcon) btnIcon.className = "fa-solid fa-camera";
+            if (btnText) btnText.innerText = "Enable Webcam Hand Tracking";
+        }
+
+        function initMediaPipe(videoElement) {
+            try {
+                mpHands = new window.Hands({
+                    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+                });
+
+                mpHands.setOptions({
+                    maxNumHands: 1,
+                    modelComplexity: 1,
+                    minDetectionConfidence: 0.5,
+                    minTrackingConfidence: 0.5
+                });
+
+                mpHands.onResults(onMediaPipeHandResults);
+
+                if (typeof window.Camera !== 'undefined') {
+                    mpCamera = new window.Camera(videoElement, {
+                        onFrame: async () => {
+                            if (webcamActive && mpHands) {
+                                await mpHands.send({ image: videoElement });
+                            }
+                        },
+                        width: 320,
+                        height: 240
+                    });
+                    mpCamera.start();
+                } else {
+                    const sendFrame = async () => {
+                        if (!webcamActive) return;
+                        if (videoElement.readyState >= 2) {
+                            await mpHands.send({ image: videoElement });
+                        }
+                        requestAnimationFrame(sendFrame);
+                    };
+                    sendFrame();
+                }
+            } catch (err) {
+                console.warn("MediaPipe Hands init error, using optical tracking:", err);
+                startOpticalMotionTracking(videoElement);
+            }
+        }
+
+        function onMediaPipeHandResults(results) {
+            if (!webcamActive) return;
+            const canvas = document.getElementById('webcam-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.save();
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw video frame
+            if (results.image) {
+                ctx.drawImage(results.image, 0, 0, w, h);
+            }
+
+            // Dark sci-fi tint
+            ctx.fillStyle = "rgba(6, 9, 19, 0.4)";
+            ctx.fillRect(0, 0, w, h);
+
+            const statusText = document.getElementById('webcam-status-text');
+            const gestureBadge = document.getElementById('pip-gesture-badge');
+            const gestureText = document.getElementById('pip-gesture-text');
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                if (statusText) statusText.innerText = "Hand Detected";
+
+                // Draw hand landmarks & connections
+                drawHandSkeleton(ctx, landmarks, w, h);
+
+                // Analyze Fist vs Open Hand
+                const wrist = landmarks[0];
+                const tipIndices = [4, 8, 12, 16, 20];
+                let avgDistToWrist = 0;
+                tipIndices.forEach(idx => {
+                    const dx = landmarks[idx].x - wrist.x;
+                    const dy = landmarks[idx].y - wrist.y;
+                    avgDistToWrist += Math.sqrt(dx * dx + dy * dy);
+                });
+                avgDistToWrist /= tipIndices.length;
+
+                // Is Fist? (curled fingers close to wrist)
+                const isFist = avgDistToWrist < 0.22;
+
+                let targetTemp = pTemp;
+
+                if (isFist) {
+                    // Fist triggers instant deep freeze!
+                    targetTemp = 20;
+                    if (gestureText) {
+                        gestureText.innerHTML = `<i class="fa-solid fa-hand-back-fist text-cyan-400 mr-1"></i><span class="text-cyan-300 font-bold">Fist: Freeze Blast (20 K)!</span>`;
+                    }
+                    if (gestureBadge) {
+                        gestureBadge.className = "absolute bottom-2.5 left-8 right-2.5 bg-cyan-950/90 border border-cyan-400 rounded-lg px-2 py-1 text-[10px] font-mono text-cyan-300 flex items-center justify-between";
+                    }
+                } else {
+                    if (gestureBadge) {
+                        gestureBadge.className = "absolute bottom-2.5 left-8 right-2.5 bg-slate-950/85 backdrop-blur-sm border border-cyan-500/40 rounded-lg px-2 py-1 text-[10px] font-mono text-cyan-300 flex items-center justify-between";
+                    }
+                    if (gestureMode === 'vertical') {
+                        // Hand height: landmark 9 (middle MCP)
+                        const handY = landmarks[9].y;
+                        const normHeight = 1.0 - Math.max(0, Math.min(1, (handY - 0.12) / 0.76));
+                        targetTemp = Math.round(10 + normHeight * (500 - 10));
+
+                        if (gestureText) {
+                            if (normHeight > 0.65) {
+                                gestureText.innerHTML = `<i class="fa-solid fa-fire text-amber-400 mr-1"></i><span class="text-amber-300">Heating Up! (${Math.round(normHeight*100)}%)</span>`;
+                            } else if (normHeight < 0.35) {
+                                gestureText.innerHTML = `<i class="fa-solid fa-snowflake text-cyan-400 mr-1"></i><span class="text-cyan-300">Cooling Down (${Math.round(normHeight*100)}%)</span>`;
+                            } else {
+                                gestureText.innerHTML = `<i class="fa-solid fa-droplet text-teal-400 mr-1"></i><span class="text-teal-300">Fluid Zone (${Math.round(normHeight*100)}%)</span>`;
+                            }
+                        }
+                    } else {
+                        // Horizontal mode
+                        const rawX = landmarks[9].x;
+                        const normX = isMirrored ? rawX : (1.0 - rawX);
+                        targetTemp = Math.round(10 + Math.max(0, Math.min(1, (normX - 0.15) / 0.7)) * (500 - 10));
+
+                        if (gestureText) {
+                            gestureText.innerHTML = `<i class="fa-solid fa-arrows-left-right text-cyan-400 mr-1"></i><span>Sweep Track: ${targetTemp} K</span>`;
+                        }
+                    }
+                }
+
+                applyHandTemperature(targetTemp);
+
+            } else {
+                if (statusText) statusText.innerText = "Searching Hand...";
+                if (gestureText) {
+                    gestureText.innerHTML = `<i class="fa-solid fa-hand text-slate-400 mr-1"></i><span>Place hand in camera view</span>`;
+                }
+            }
+
+            ctx.restore();
+        }
+
+        // Draw neon sci-fi hand skeleton
+        function drawHandSkeleton(ctx, landmarks, w, h) {
+            const connections = [
+                [0, 1], [1, 2], [2, 3], [3, 4],
+                [0, 5], [5, 6], [6, 7], [7, 8],
+                [0, 9], [9, 10], [10, 11], [11, 12],
+                [0, 13], [13, 14], [14, 15], [15, 16],
+                [0, 17], [17, 18], [18, 19], [19, 20],
+                [5, 9], [9, 13], [13, 17]
+            ];
+
+            // Neon cyan bones
+            ctx.strokeStyle = "rgba(0, 243, 255, 0.75)";
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = "round";
+
+            connections.forEach(([i, j]) => {
+                const p1 = landmarks[i];
+                const p2 = landmarks[j];
+                ctx.beginPath();
+                ctx.moveTo(p1.x * w, p1.y * h);
+                ctx.lineTo(p2.x * w, p2.y * h);
+                ctx.stroke();
+            });
+
+            // Joints
+            landmarks.forEach((p, index) => {
+                const x = p.x * w;
+                const y = p.y * h;
+                const isTip = [4, 8, 12, 16, 20].includes(index);
+
+                ctx.beginPath();
+                ctx.arc(x, y, isTip ? 5 : 3, 0, 2 * Math.PI);
+                ctx.fillStyle = isTip ? "#f59e0b" : "#00f3ff";
+                ctx.fill();
+
+                ctx.strokeStyle = "#ffffff";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            // Highlight palm center (landmark 9)
+            const center = landmarks[9];
+            ctx.beginPath();
+            ctx.arc(center.x * w, center.y * h, 11, 0, 2 * Math.PI);
+            ctx.strokeStyle = "rgba(245, 158, 11, 0.9)";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([3, 3]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // Apply smoothed temperature to particle engine, slider, and HUD
+        function applyHandTemperature(targetTemp) {
+            pTemp = Math.round(pTemp * 0.75 + targetTemp * 0.25);
+
+            const slider = document.getElementById('temp-slider');
+            if (slider) slider.value = pTemp;
+
+            updateParticleHUD();
+            updatePipHUD();
+
+            // Sound on phase crossing
+            let currentPhase = 'solid';
+            if (pTemp >= 273 && pTemp < 373) currentPhase = 'liquid';
+            else if (pTemp >= 373) currentPhase = 'gas';
+
+            if (currentPhase !== lastPhaseSound) {
+                if (currentPhase === 'gas') playTone(680, 0.18);
+                else if (currentPhase === 'liquid') playTone(440, 0.18);
+                else playTone(280, 0.18);
+                lastPhaseSound = currentPhase;
+            }
+        }
+
+        // Update PIP Thermometer Gauge and Text
+        function updatePipHUD() {
+            const pipFill = document.getElementById('pip-temp-fill');
+            const pipText = document.getElementById('pip-temp-text');
+            const pipPhaseTag = document.getElementById('pip-phase-tag');
+
+            const pct = Math.max(0, Math.min(100, ((pTemp - 10) / (500 - 10)) * 100));
+            if (pipFill) pipFill.style.height = `${pct}%`;
+            if (pipText) pipText.innerText = `${pTemp} K (${pTemp - 273}°C)`;
+
+            if (pipPhaseTag) {
+                if (pTemp < 273) {
+                    pipPhaseTag.innerText = "SOLID";
+                    pipPhaseTag.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800";
+                } else if (pTemp >= 273 && pTemp < 373) {
+                    pipPhaseTag.innerText = "LIQUID";
+                    pipPhaseTag.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-teal-950 text-teal-300 border border-teal-800";
+                } else {
+                    pipPhaseTag.innerText = "GAS";
+                    pipPhaseTag.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800";
+                }
+            }
+        }
+
+        // Robust optical motion fallback if MediaPipe CDN is delayed or offline
+        function startOpticalMotionTracking(video) {
+            const canvas = document.getElementById('webcam-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = 80;
+            tempCanvas.height = 60;
+            const tempCtx = tempCanvas.getContext('2d');
+
+            let lastFrame = null;
+
+            const loop = () => {
+                if (!webcamActive) return;
+
+                if (video.readyState >= 2) {
+                    ctx.drawImage(video, 0, 0, w, h);
+                    ctx.fillStyle = "rgba(6, 9, 19, 0.4)";
+                    ctx.fillRect(0, 0, w, h);
+
+                    tempCtx.drawImage(video, 0, 0, 80, 60);
+                    const currentFrame = tempCtx.getImageData(0, 0, 80, 60);
+
+                    if (lastFrame) {
+                        let motionYSum = 0;
+                        let motionCount = 0;
+
+                        const curData = currentFrame.data;
+                        const prevData = lastFrame.data;
+
+                        for (let i = 0; i < curData.length; i += 4) {
+                            const diff = Math.abs(curData[i] - prevData[i]) +
+                                         Math.abs(curData[i+1] - prevData[i+1]) +
+                                         Math.abs(curData[i+2] - prevData[i+2]);
+                            if (diff > 45) {
+                                const pixelIdx = i / 4;
+                                const y = Math.floor(pixelIdx / 80);
+                                motionYSum += y;
+                                motionCount++;
+                            }
+                        }
+
+                        if (motionCount > 15) {
+                            const avgY = motionYSum / motionCount;
+                            const normHeight = 1.0 - (avgY / 60);
+                            const targetTemp = Math.round(10 + normHeight * (500 - 10));
+                            applyHandTemperature(targetTemp);
+
+                            ctx.beginPath();
+                            ctx.arc(w / 2, avgY * (h / 60), 16, 0, 2 * Math.PI);
+                            ctx.fillStyle = "rgba(0, 243, 255, 0.5)";
+                            ctx.fill();
+                            ctx.strokeStyle = "#ffffff";
+                            ctx.stroke();
+
+                            const gestureText = document.getElementById('pip-gesture-text');
+                            if (gestureText) {
+                                gestureText.innerHTML = `<i class="fa-solid fa-bolt text-cyan-400 mr-1"></i><span>Motion Track: ${pTemp} K</span>`;
+                            }
+                        }
+                    }
+                    lastFrame = currentFrame;
+                }
+
+                fallbackAnimationId = requestAnimationFrame(loop);
+            };
+
+            loop();
+        }
+        let heatProgress = 0; // 0 to 5 steps
+        const heatingSteps = [
+            { temp: -20, phase: "Solid Ice", latent: false, note: "Ice absorbs sensible heat. Temperature climbs from -20°C to 0°C as particle vibrations intensify." },
+            { temp: 0, phase: "Melting Ice $\\rightarrow$ Water", latent: true, note: "LATENT HEAT OF FUSION: Temperature freezes at 0°C! Added heat strictly breaks lattice bonds." },
+            { temp: 45, phase: "Liquid Water", latent: false, note: "All ice has melted. Liquid water warms from 0°C to 100°C as molecules slide past each other faster." },
+            { temp: 100, phase: "Boiling Water $\\rightarrow$ Steam", latent: true, note: "LATENT HEAT OF VAPORIZATION: Temperature locks at 100°C! Heat gives particles energy to escape into vapor." },
+            { temp: 140, phase: "Superheated Steam (Gas)", latent: false, note: "Water is now gaseous steam. Temperature increases freely as gas particles fly with high kinetic speed." }
+        ];
+
+        function initHeatingCurve() {
+            drawHeatingCurve();
+            updateHeatingReadout();
+        }
+
+        function addHeatingStep(dir) {
+            heatProgress = Math.max(0, Math.min(heatingSteps.length - 1, heatProgress + dir));
+            drawHeatingCurve();
+            updateHeatingReadout();
+            playTone(400 + heatProgress * 70, 0.12);
+        }
+
+        function updateHeatingReadout() {
+            const step = heatingSteps[heatProgress];
+            document.getElementById('heat-phase-val').innerText = step.phase.replace('\\rightarrow', '→');
+            document.getElementById('heat-temp-val').innerText = `${step.temp}°C (${step.temp + 273} K)`;
+            
+            const latentEl = document.getElementById('heat-latent-val');
+            if (step.latent) {
+                latentEl.innerText = "ACTIVE (Temp Constant!)";
+                latentEl.className = "text-amber-400 font-bold animate-pulse";
+            } else {
+                latentEl.innerText = "No (Temp Rising)";
+                latentEl.className = "text-slate-400";
+            }
+
+            document.getElementById('heat-explanation').innerText = step.note;
+        }
+
+        function drawHeatingCurve() {
+            const canvas = document.getElementById('heating-curve-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Axes
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(50, 20);
+            ctx.lineTo(50, 220);
+            ctx.lineTo(570, 220);
+            ctx.stroke();
+
+            // Axis labels
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '11px monospace';
+            ctx.fillText('Temp (°C)', 10, 15);
+            ctx.fillText('Heat Energy Added (Joules) →', 380, 245);
+
+            // Y-ticks
+            ctx.fillText('100°C (BP)', 2, 75);
+            ctx.fillText('0°C (MP)', 10, 155);
+            ctx.fillText('-20°C', 15, 215);
+
+            // Dotted reference lines
+            ctx.setLineDash([4, 4]);
+            ctx.strokeStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.moveTo(50, 70);
+            ctx.lineTo(570, 70);
+            ctx.moveTo(50, 150);
+            ctx.lineTo(570, 150);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Curve coordinate segments
+            const points = [
+                { x: 50, y: 210 },  // -20C Ice
+                { x: 120, y: 150 }, // 0C Ice reaches MP
+                { x: 230, y: 150 }, // 0C Melting Plateau (Latent Heat)
+                { x: 340, y: 70 },  // 100C Water reaches BP
+                { x: 480, y: 70 },  // 100C Boiling Plateau (Latent Heat)
+                { x: 560, y: 30 }   // 140C Steam
+            ];
+
+            // Draw full guide curve
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            for (let i = 1; i < points.length; i++) {
+                ctx.lineTo(points[i].x, points[i].y);
+            }
+            ctx.stroke();
+
+            // Highlight current step point
+            const activeCoords = [
+                points[0],
+                { x: 175, y: 150 },
+                points[3],
+                { x: 410, y: 70 },
+                points[5]
+            ];
+            const cur = activeCoords[heatProgress];
+
+            ctx.fillStyle = '#00f3ff';
+            ctx.beginPath();
+            ctx.arc(cur.x, cur.y, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Glow circle
+            ctx.strokeStyle = '#a855f7';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cur.x, cur.y, 13, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        /* --------------------------------------------------
+           LAB 3: THREE.JS 3D WATER CYCLE SIMULATOR
+        -------------------------------------------------- */
+        let wScene, wCamera, wRenderer, wRainParticles, wVaporGroup;
+        let isRaining = false;
+
+        function initWaterCycleLab() {
+            const container = document.getElementById('watercycle-canvas-container');
+            if (!container) return;
+            const width = container.clientWidth || 800;
+            const height = container.clientHeight || 480;
+
+            wScene = new THREE.Scene();
+            wCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+            wCamera.position.set(0, 14, 28);
+
+            wRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            wRenderer.setSize(width, height);
+            wRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(wRenderer.domElement);
+
+            const controls = new THREE.OrbitControls(wCamera, wRenderer.domElement);
+            controls.enableDamping = true;
+
+            // Sunlight & Sky Light
+            const sunLight = new THREE.DirectionalLight(0xfffaed, 1.6);
+            sunLight.position.set(10, 20, 10);
+            wScene.add(sunLight);
+            wScene.add(new THREE.AmbientLight(0x38bdf8, 0.45));
+
+            // Low-poly Terrain
+            const terrainGeo = new THREE.PlaneGeometry(26, 18, 16, 16);
+            const pos = terrainGeo.attributes.position;
+            for (let i = 0; i < pos.count; i++) {
+                const x = pos.getX(i);
+                if (x < -2) {
+                    pos.setZ(i, Math.sin(x * 0.45) * 3.5 + Math.random() * 0.4); // Mountain
+                } else {
+                    pos.setZ(i, -1.2); // Ocean bed
+                }
+            }
+            terrainGeo.computeVertexNormals();
+
+            const terrainMat = new THREE.MeshStandardMaterial({ color: 0x166534, flatShading: true });
+            const terrainMesh = new THREE.Mesh(terrainGeo, terrainMat);
+            terrainMesh.rotation.x = -Math.PI / 2;
+            wScene.add(terrainMesh);
+
+            // Ocean
+            const oceanGeo = new THREE.PlaneGeometry(16, 18);
+            const oceanMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, transparent: true, opacity: 0.82 });
+            const ocean = new THREE.Mesh(oceanGeo, oceanMat);
+            ocean.rotation.x = -Math.PI / 2;
+            ocean.position.set(6, -0.4, 0);
+            wScene.add(ocean);
+
+            // Sun
+            const sunGeo = new THREE.SphereGeometry(1.6, 16, 16);
+            const sunMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+            const sun = new THREE.Mesh(sunGeo, sunMat);
+            sun.position.set(-8, 11, -6);
+            wScene.add(sun);
+
+            // Clouds
+            const cloudGroup = new THREE.Group();
+            const cloudMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.8 });
+            for (let i = 0; i < 6; i++) {
+                const p = new THREE.Mesh(new THREE.SphereGeometry(1.2 + Math.random() * 0.6, 12, 12), cloudMat);
+                p.position.set(i * 1.3 - 2, Math.sin(i) * 0.3, Math.cos(i) * 0.3);
+                cloudGroup.add(p);
+            }
+            cloudGroup.position.set(-1, 7, 0);
+            wScene.add(cloudGroup);
+
+            // Rain Particle System
+            const rainGeo = new THREE.BufferGeometry();
+            const rainCount = 400;
+            const rainPos = new Float32Array(rainCount * 3);
+            for (let i = 0; i < rainCount * 3; i += 3) {
+                rainPos[i] = (Math.random() - 0.5) * 12;
+                rainPos[i + 1] = Math.random() * 7 + 1;
+                rainPos[i + 2] = (Math.random() - 0.5) * 12;
+            }
+            rainGeo.setAttribute('position', new THREE.BufferAttribute(rainPos, 3));
+            const rainMat = new THREE.PointsMaterial({ color: 0x38bdf8, size: 0.18, transparent: true });
+            wRainParticles = new THREE.Points(rainGeo, rainMat);
+            wScene.add(wRainParticles);
+
+            animateWaterCycleLab();
+        }
+
+        /* --------------------------------------------------
+           RAIN WATER CYCLE ACTIVITY ENGINE (From Gizmo Video)
+        -------------------------------------------------- */
+        const WATER_CYCLE_DATA = {
+            "Atmosphere": {
+                x: 48, y: 16,
+                state: "Vapor (Gas)",
+                icon: "fa-cloud-arrow-up",
+                mechanism: "Evaporation & Transpiration",
+                text: "When liquid water is heated by the sun, it evaporates into the atmosphere. The atmosphere contains about 13,000 cubic kilometers of water (2,100 cubic miles), about 0.001% of the total water on the planet.",
+                next: ["Clouds"]
+            },
+            "Clouds": {
+                x: 52, y: 28,
+                state: "Condensed Droplets / Ice",
+                icon: "fa-cloud",
+                mechanism: "Condensation",
+                text: "When saturated air in the atmosphere cools, water vapor condenses into tiny droplets to form clouds. Besides providing a source of precipitation, clouds play an important role in controlling Earth's surface temperatures.",
+                next: ["Precip (rain)", "Precip (snow)", "Atmosphere"]
+            },
+            "Precip (rain)": {
+                x: 54, y: 44,
+                state: "Liquid Precipitation",
+                icon: "fa-cloud-showers-heavy",
+                mechanism: "Precipitation",
+                text: "Precipitation occurs when water droplets in clouds become too heavy to remain suspended. Rain falls over land and water bodies, delivering freshwater back to Earth's surface.",
+                next: ["Soil", "Vegetation", "Rivers", "Lakes", "Oceans", "Agriculture"]
+            },
+            "Precip (snow)": {
+                x: 40, y: 24,
+                state: "Solid Ice Crystals",
+                icon: "fa-snowflake",
+                mechanism: "Precipitation (Snow)",
+                text: "When atmospheric temperatures fall below 0°C (32°F), water vapor freezes into crystalline snow, accumulating on mountain ridges and glaciers.",
+                next: ["Mountains", "Soil", "Rivers"]
+            },
+            "Mountains": {
+                x: 38, y: 22,
+                state: "Solid Ice & Glaciers",
+                icon: "fa-mountain",
+                mechanism: "Snowpack Accumulation",
+                text: "Glaciers and mountain snowpack store about 68.7% of all freshwater on Earth. When snow and ice melt, they feed mountain streams and major rivers downstream.",
+                next: ["Waterfall", "Rivers", "Soil", "Atmosphere"]
+            },
+            "Waterfall": {
+                x: 43, y: 36,
+                state: "Rapid Stream Flow",
+                icon: "fa-water",
+                mechanism: "Gravity Cascading",
+                text: "Waterfalls plunge over steep rock cliffs, aerating the water and generating mist before the water flows swiftly into valley rivers.",
+                next: ["Rivers", "Atmosphere"]
+            },
+            "Lakes": {
+                x: 70, y: 52,
+                state: "Liquid (Freshwater)",
+                icon: "fa-water",
+                mechanism: "Surface Storage",
+                text: "Freshwater lakes store about 0.26% of all freshwater on Earth. They provide vital aquatic habitats, drinking water for animals, and municipal resources.",
+                next: ["Atmosphere", "Rivers", "Wildlife", "Industry"]
+            },
+            "Rivers": {
+                x: 50, y: 68,
+                state: "Liquid Surface Flow",
+                icon: "fa-route",
+                mechanism: "Overland Surface Runoff",
+                text: "Rivers are flowing ribbons of water draining watersheds toward lakes, reservoirs, and oceans, transporting essential minerals and nutrients.",
+                next: ["Lakes", "Reservoir", "Oceans", "Industry", "Waterfall", "Atmosphere"]
+            },
+            "Reservoir": {
+                x: 62, y: 66,
+                state: "Engineered Storage",
+                icon: "fa-warehouse",
+                mechanism: "Dam Retention",
+                text: "Reservoirs are artificial lakes created by building dams across rivers. They store freshwater for human consumption, agricultural irrigation, and hydroelectric generation.",
+                next: ["Person", "Agriculture", "Rivers", "Atmosphere"]
+            },
+            "Oceans": {
+                x: 80, y: 84,
+                state: "Liquid (Saline)",
+                icon: "fa-ship",
+                mechanism: "Planetary Heat Sink & Source",
+                text: "The oceans contain 97.25% of Earth's total water. They are the planet's primary reservoir and driver of the global water cycle, providing about 86% of all evaporated water vapor.",
+                next: ["Atmosphere"]
+            },
+            "Soil": {
+                x: 26, y: 62,
+                state: "Soil Moisture",
+                icon: "fa-seedling",
+                mechanism: "Infiltration",
+                text: "Moisture in the soil makes up about 0.005% of Earth's water. Soil moisture is critical for plant growth and filters rainwater as it slowly seeps down toward subterranean aquifers.",
+                next: ["Aquifer", "Atmosphere", "Vegetation", "Wildlife"]
+            },
+            "Aquifer": {
+                x: 35, y: 88,
+                state: "Subterranean Groundwater",
+                icon: "fa-layer-group",
+                mechanism: "Deep Percolation / Storage",
+                text: "Aquifers are underground layers of permeable rock and sediment holding over 30% of the world's freshwater, feeding groundwater wells and surface springs.",
+                next: ["Rivers", "Oceans", "Reservoir", "Person"]
+            },
+            "Vegetation": {
+                x: 64, y: 46,
+                state: "Plant Moisture & Sap",
+                icon: "fa-tree",
+                mechanism: "Plant Uptake & Transpiration",
+                text: "Plants absorb water through roots. About 97% to 99% of this water travels up to leaves and is transpired into the atmosphere as vapor through stomata.",
+                next: ["Atmosphere", "Wildlife", "Soil"]
+            },
+            "Wildlife": {
+                x: 72, y: 58,
+                state: "Biological Fluid",
+                icon: "fa-paw",
+                mechanism: "Animal Ingestion & Respiration",
+                text: "Animals drink freshwater from lakes, streams, and plants. Water returns to the environment through respiratory exhalation and excretion.",
+                next: ["Atmosphere", "Soil"]
+            },
+            "Agriculture": {
+                x: 40, y: 56,
+                state: "Irrigation & Crops",
+                icon: "fa-tractor",
+                mechanism: "Agricultural Irrigation",
+                text: "Agriculture consumes massive volumes of freshwater for crop farming. Water is absorbed by plants or evaporates from soil and foliage.",
+                next: ["Atmosphere", "Soil", "Rivers", "Person"]
+            },
+            "Person": {
+                x: 39, y: 50,
+                state: "Domestic Consumption",
+                icon: "fa-user",
+                mechanism: "Human Use",
+                text: "Humans use water daily for drinking, cooking, cleaning, and sanitation. Wastewater is discharged into municipal drainage networks.",
+                next: ["Wastewater", "Atmosphere"]
+            },
+            "Industry": {
+                x: 17, y: 52,
+                state: "Industrial Coolant",
+                icon: "fa-industry",
+                mechanism: "Industrial Processing",
+                text: "Factories use water for cooling machinery, processing materials, and energy generation. Used water is routed to wastewater treatment.",
+                next: ["Wastewater", "Atmosphere", "Rivers"]
+            },
+            "Wastewater": {
+                x: 49, y: 80,
+                state: "Treated Effluent",
+                icon: "fa-recycle",
+                mechanism: "Filtration & Clarification",
+                text: "Wastewater treatment plants purify sewage and factory runoff before safely discharging cleaned water into rivers, lakes, or coastal oceans.",
+                next: ["Rivers", "Lakes", "Oceans", "Agriculture"]
+            }
+        };
+
+        // The exact 35-step journey recorded in the user's activity screenshot
+        const SAMPLE_GIZMO_JOURNEY = [
+            "Agriculture", "Atmosphere", "Clouds", "Precip (rain)", "Lakes", "Industry",
+            "Person", "Wastewater", "Rivers", "Reservoir", "Wildlife", "Soil",
+            "Vegetation", "Person", "Atmosphere", "Clouds", "Precip (rain)", "Rivers",
+            "Industry", "Rivers", "Vegetation", "Wildlife", "Soil", "Aquifer",
+            "Wildlife", "Soil", "Atmosphere", "Clouds", "Atmosphere", "Clouds",
+            "Precip (rain)", "Waterfall", "Oceans", "Atmosphere"
+        ];
+
+        let wcCurrentLocation = "Atmosphere";
+        let wcHistory = ["Atmosphere"];
+        let wcActiveTab = "sim";
+        let backdropMode = "active"; // "active", "focus-3d", "dimmed"
+
+        function initRainWaterCycleActivity() {
+            renderMapNodes();
+            renderWaterCycleLocation(wcCurrentLocation);
+            updatePathSummaryStats();
+        }
+
+        function switchWCTab(tab) {
+            wcActiveTab = tab;
+            const simBtn = document.getElementById('tab-btn-sim');
+            const pathBtn = document.getElementById('tab-btn-path');
+            const simView = document.getElementById('wc-view-sim');
+            const pathView = document.getElementById('wc-view-path');
+
+            if (tab === 'sim') {
+                simBtn.className = "px-5 py-2 rounded-t-xl bg-slate-800 text-cyan-400 font-bold text-xs border-t-2 border-t-cyan-400 font-mono flex items-center gap-2 transition";
+                pathBtn.className = "px-5 py-2 rounded-t-xl bg-slate-900/50 text-slate-400 hover:text-white font-bold text-xs font-mono flex items-center gap-2 transition";
+                simView.classList.remove('hidden');
+                pathView.classList.add('hidden');
+            } else {
+                pathBtn.className = "px-5 py-2 rounded-t-xl bg-slate-800 text-cyan-400 font-bold text-xs border-t-2 border-t-cyan-400 font-mono flex items-center gap-2 transition";
+                simBtn.className = "px-5 py-2 rounded-t-xl bg-slate-900/50 text-slate-400 hover:text-white font-bold text-xs font-mono flex items-center gap-2 transition";
+                pathView.classList.remove('hidden');
+                simView.classList.add('hidden');
+                renderPathTable();
+            }
+            playTone(500, 0.08);
+        }
+
+        function renderMapNodes() {
+            const container = document.getElementById('map-nodes-container');
+            if (!container) return;
+            container.innerHTML = "";
+
+            Object.keys(WATER_CYCLE_DATA).forEach(loc => {
+                const d = WATER_CYCLE_DATA[loc];
+                const marker = document.createElement('div');
+                marker.className = "absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 group";
+                marker.style.left = `${d.x}%`;
+                marker.style.top = `${d.y}%`;
+                marker.onclick = () => {
+                    const curData = WATER_CYCLE_DATA[wcCurrentLocation];
+                    if (curData.next.includes(loc)) {
+                        selectWaterCycleDestination(loc);
+                    } else {
+                        // Direct jump
+                        selectWaterCycleDestination(loc);
+                    }
+                };
+
+                marker.innerHTML = `
+                    <div class="w-6 h-6 rounded-full bg-slate-900/80 border border-cyan-400/50 flex items-center justify-center text-[10px] text-cyan-300 shadow hover:scale-125 transition hover:bg-cyan-500 hover:text-slate-950">
+                        <i class="fa-solid ${d.icon}"></i>
+                    </div>
+                    <div class="absolute bottom-7 left-1/2 transform -translate-x-1/2 hidden group-hover:block whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-cyan-300 text-[10px] font-mono border border-cyan-500/40 pointer-events-none z-40 shadow-lg">
+                        ${loc}
+                    </div>
+                `;
+                container.appendChild(marker);
+            });
+        }
+
+        function renderWaterCycleLocation(locName) {
+            wcCurrentLocation = locName;
+            const data = WATER_CYCLE_DATA[locName] || WATER_CYCLE_DATA["Atmosphere"];
+
+            // Move animated pin
+            const pin = document.getElementById('water-droplet-pin');
+            if (pin) {
+                pin.style.left = `${data.x}%`;
+                pin.style.top = `${data.y}%`;
+            }
+
+            // Update callout
+            const titleEl = document.getElementById('wc-callout-title');
+            const stateEl = document.getElementById('wc-callout-state');
+            const textEl = document.getElementById('wc-callout-text');
+            const phaseInd = document.getElementById('wc-phase-indicator');
+            const stepCount = document.getElementById('wc-step-count');
+            const pillEl = document.getElementById('path-step-pill');
+
+            if (titleEl) titleEl.innerText = locName;
+            if (stateEl) stateEl.innerText = data.state;
+            if (textEl) textEl.innerText = data.text;
+            if (phaseInd) phaseInd.innerText = data.state;
+            if (stepCount) stepCount.innerText = wcHistory.length;
+            if (pillEl) pillEl.innerText = `${wcHistory.length} Steps`;
+
+            // Adjust callout position dynamically if drop is at top
+            const callout = document.getElementById('wc-callout');
+            if (callout) {
+                if (data.y < 35 && data.x < 55) {
+                    callout.style.top = "auto";
+                    callout.style.bottom = "24px";
+                    callout.style.left = "24px";
+                } else {
+                    callout.style.bottom = "auto";
+                    callout.style.top = "24px";
+                    callout.style.left = "24px";
+                }
+            }
+
+            // Render Next Destination Buttons on right panel
+            const btnContainer = document.getElementById('wc-next-buttons');
+            if (btnContainer) {
+                btnContainer.innerHTML = "";
+                data.next.forEach(dest => {
+                    const destData = WATER_CYCLE_DATA[dest];
+                    const btn = document.createElement('button');
+                    btn.className = "w-full p-2.5 rounded-xl bg-slate-800/90 hover:bg-cyan-500 hover:text-slate-950 text-slate-200 text-left text-xs font-mono font-bold transition flex items-center justify-between border border-slate-700 hover:border-cyan-400 group shadow";
+                    btn.onclick = () => selectWaterCycleDestination(dest);
+                    btn.innerHTML = `
+                        <div class="flex items-center space-x-2">
+                            <span class="w-5 h-5 rounded-lg bg-cyan-500/20 group-hover:bg-slate-950/20 flex items-center justify-center text-cyan-400 group-hover:text-slate-950 text-[10px]">
+                                <i class="fa-solid ${destData ? destData.icon : 'fa-droplet'}"></i>
+                            </span>
+                            <span>${dest}</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] text-slate-500 group-hover:text-slate-950"></i>
+                    `;
+                    btnContainer.appendChild(btn);
+                });
+            }
+
+            updatePathSummaryStats();
+        }
+
+        function selectWaterCycleDestination(destName) {
+            wcHistory.push(destName);
+            renderWaterCycleLocation(destName);
+            playTone(600, 0.12);
+        }
+
+        function undoWaterCycleStep() {
+            if (wcHistory.length > 1) {
+                wcHistory.pop();
+                const prev = wcHistory[wcHistory.length - 1];
+                renderWaterCycleLocation(prev);
+                playTone(450, 0.1);
+            }
+        }
+
+        function resetWaterCycleJourney() {
+            wcHistory = ["Atmosphere"];
+            renderWaterCycleLocation("Atmosphere");
+            if (wcActiveTab === 'path') renderPathTable();
+            playTone(380, 0.15);
+        }
+
+        function autoStepWaterCycle() {
+            const curData = WATER_CYCLE_DATA[wcCurrentLocation];
+            if (curData && curData.next.length > 0) {
+                const nextDest = curData.next[Math.floor(Math.random() * curData.next.length)];
+                selectWaterCycleDestination(nextDest);
+            }
+        }
+
+        function loadSampleJourney() {
+            wcHistory = [...SAMPLE_GIZMO_JOURNEY];
+            const last = wcHistory[wcHistory.length - 1];
+            renderWaterCycleLocation(last);
+            if (wcActiveTab === 'path') {
+                renderPathTable();
+            } else {
+                switchWCTab('path');
+            }
+            playTone(720, 0.2);
+        }
+
+        function clearPathHistory() {
+            wcHistory = [wcCurrentLocation];
+            renderWaterCycleLocation(wcCurrentLocation);
+            if (wcActiveTab === 'path') renderPathTable();
+            playTone(300, 0.1);
+        }
+
+        function updatePathSummaryStats() {
+            const totalEl = document.getElementById('path-stat-steps');
+            const uniqEl = document.getElementById('path-stat-unique');
+            const evapEl = document.getElementById('path-stat-evap');
+            const precipEl = document.getElementById('path-stat-precip');
+
+            if (!totalEl) return;
+
+            totalEl.innerText = wcHistory.length;
+            const uniqueSet = new Set(wcHistory);
+            uniqEl.innerText = `${uniqueSet.size} / 18`;
+
+            let evapCount = 0;
+            let precipCount = 0;
+            for (let i = 1; i < wcHistory.length; i++) {
+                const prev = wcHistory[i - 1];
+                const cur = wcHistory[i];
+                if ((prev === "Oceans" || prev === "Lakes" || prev === "Soil" || prev === "Vegetation") && cur === "Atmosphere") {
+                    evapCount++;
+                }
+                if (cur === "Precip (rain)" || cur === "Precip (snow)") {
+                    precipCount++;
+                }
+            }
+
+            evapEl.innerText = evapCount;
+            precipEl.innerText = precipCount;
+        }
+
+        function renderPathTable() {
+            const tableBody = document.getElementById('path-table-body');
+            if (!tableBody) return;
+            tableBody.innerHTML = "";
+
+            wcHistory.forEach((loc, idx) => {
+                const data = WATER_CYCLE_DATA[loc] || { state: "Liquid", mechanism: "State Flow", icon: "fa-droplet" };
+                const row = document.createElement('div');
+                row.className = "px-4 py-2.5 flex items-center justify-between hover:bg-slate-800/60 transition cursor-pointer";
+                row.onclick = () => {
+                    wcCurrentLocation = loc;
+                    switchWCTab('sim');
+                    renderWaterCycleLocation(loc);
+                };
+
+                row.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center text-[10px] font-bold border border-slate-700">
+                            ${idx + 1}
+                        </span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-cyan-400 font-bold">${loc}</span>
+                            <span class="text-[10px] text-slate-500">(${data.state})</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-slate-300 font-mono">${data.mechanism}</span>
+                        <i class="fa-solid fa-angle-right text-slate-600 text-[10px]"></i>
+                    </div>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            updatePathSummaryStats();
+        }
+
+        function toggle3DBackdropMode() {
+            const bg = document.getElementById('watercycle-canvas-container');
+            const layer = document.getElementById('gizmo-interactive-layer');
+            const text = document.getElementById('toggle-bg-text');
+
+            if (backdropMode === "active") {
+                backdropMode = "focus-3d";
+                if (layer) layer.style.opacity = "0.15";
+                if (bg) bg.style.opacity = "1";
+                if (text) text.innerText = "3D Backdrop: Full 3D";
+                playTone(480, 0.1);
+            } else if (backdropMode === "focus-3d") {
+                backdropMode = "dimmed";
+                if (layer) layer.style.opacity = "1";
+                if (bg) bg.style.opacity = "0.15";
+                if (text) text.innerText = "3D Backdrop: Dimmed";
+                playTone(560, 0.1);
+            } else {
+                backdropMode = "active";
+                if (layer) layer.style.opacity = "1";
+                if (bg) bg.style.opacity = "0.85";
+                if (text) text.innerText = "3D Backdrop: Active";
+                playTone(640, 0.1);
+            }
+        }
+
+        function triggerRainCycle() {
+            isRaining = !isRaining;
+            const btnText = document.getElementById('rain-btn-text');
+            const hudText = document.getElementById('hud-precip');
+
+            if (isRaining) {
+                btnText.innerText = "Halt Rainstorm";
+                hudText.innerText = "Heavy Downpour (Active)";
+                hudText.className = "text-cyan-400 font-bold animate-pulse text-right";
+                playTone(320, 0.25);
+            } else {
+                btnText.innerText = "Atmospheric Rainstorm";
+                hudText.innerText = "Standby";
+                hudText.className = "text-slate-300 text-right";
+                playTone(240, 0.15);
+            }
+        }
+
+        function animateWaterCycleLab() {
+            requestAnimationFrame(animateWaterCycleLab);
+
+            if (wRainParticles) {
+                const pos = wRainParticles.geometry.attributes.position.array;
+                for (let i = 1; i < pos.length; i += 3) {
+                    if (isRaining) {
+                        pos[i] -= 0.25;
+                        if (pos[i] < 0) pos[i] = 7;
+                    } else {
+                        pos[i] = -12; // hide below surface
+                    }
+                }
+                wRainParticles.geometry.attributes.position.needsUpdate = true;
+            }
+
+            if (wRenderer && wScene && wCamera) {
+                wRenderer.render(wScene, wCamera);
+            }
+        }
+
+        /* --------------------------------------------------
+           LAB 4: THREE.JS 3D ATOMIC ORBITAL FORGE
+        -------------------------------------------------- */
+        let aScene, aCamera, aRenderer, aCurrentGroup, aElectrons = [];
+
+        function initAtomLab() {
+            const container = document.getElementById('atom-canvas-container');
+            if (!container) return;
+            const width = container.clientWidth || 800;
+            const height = container.clientHeight || 480;
+
+            aScene = new THREE.Scene();
+            aCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+            aCamera.position.set(0, 0, 16);
+
+            aRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            aRenderer.setSize(width, height);
+            aRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(aRenderer.domElement);
+
+            const controls = new THREE.OrbitControls(aCamera, aRenderer.domElement);
+            controls.enableDamping = true;
+
+            const light = new THREE.PointLight(0xffffff, 1.6, 60);
+            light.position.set(10, 10, 10);
+            aScene.add(light);
+            aScene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+            aCurrentGroup = new THREE.Group();
+            aScene.add(aCurrentGroup);
+
+            renderAtomModel('H');
+            animateAtomLab();
+        }
+
+        function clearAtomScene() {
+            aElectrons = [];
+            while (aCurrentGroup.children.length > 0) {
+                const obj = aCurrentGroup.children[0];
+                aCurrentGroup.remove(obj);
+            }
+        }
+
+        function renderAtomModel(type) {
+            clearAtomScene();
+            playTone(520, 0.12);
+
+            const dispTitle = document.getElementById('atom-name-display');
+            const dispDetail = document.getElementById('atom-detail-display');
+
+            if (type === 'H') {
+                dispTitle.innerText = "Hydrogen Atom (H)";
+                dispDetail.innerText = "Atomic Number: 1 | Protons: 1 (Red) | Neutrons: 0 | Electrons: 1 (Cyan)";
+
+                // Nucleus (1 proton)
+                const p = new THREE.Mesh(new THREE.SphereGeometry(0.8, 20, 20), new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.3 }));
+                aCurrentGroup.add(p);
+
+                // Electron orbit ring
+                const ringGeo = new THREE.RingGeometry(3.5, 3.55, 64);
+                const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff, side: THREE.DoubleSide, transparent: true, opacity: 0.6 });
+                const ring = new THREE.Mesh(ringGeo, ringMat);
+                ring.rotation.x = Math.PI / 3;
+                aCurrentGroup.add(ring);
+
+                // Electron
+                const e = new THREE.Mesh(new THREE.SphereGeometry(0.3, 16, 16), new THREE.MeshBasicMaterial({ color: 0x00f3ff }));
+                e.userData = { angle: 0, speed: 0.04, radius: 3.52, tilt: Math.PI / 3 };
+                aElectrons.push(e);
+                aCurrentGroup.add(e);
+
+            } else if (type === 'C') {
+                dispTitle.innerText = "Carbon Atom (C)";
+                dispDetail.innerText = "Atomic Number: 6 | Protons: 6 | Neutrons: 6 | Electrons: 6 (2 in 1st shell, 4 in 2nd shell)";
+
+                // Nucleus cluster
+                for (let i = 0; i < 12; i++) {
+                    const isProton = i % 2 === 0;
+                    const m = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.5, 16, 16),
+                        new THREE.MeshStandardMaterial({ color: isProton ? 0xef4444 : 0x64748b, roughness: 0.3 })
+                    );
+                    m.position.set((Math.random() - 0.5) * 1.3, (Math.random() - 0.5) * 1.3, (Math.random() - 0.5) * 1.3);
+                    aCurrentGroup.add(m);
+                }
+
+                // Inner shell (2 electrons)
+                const ring1 = new THREE.Mesh(new THREE.RingGeometry(2.8, 2.84, 64), new THREE.MeshBasicMaterial({ color: 0x00f3ff, side: THREE.DoubleSide, transparent: true, opacity: 0.4 }));
+                aCurrentGroup.add(ring1);
+                for (let i = 0; i < 2; i++) {
+                    const e = new THREE.Mesh(new THREE.SphereGeometry(0.25, 16, 16), new THREE.MeshBasicMaterial({ color: 0x00f3ff }));
+                    e.userData = { angle: i * Math.PI, speed: 0.05, radius: 2.82, tilt: 0 };
+                    aElectrons.push(e);
+                    aCurrentGroup.add(e);
+                }
+
+                // Outer shell (4 electrons)
+                const ring2 = new THREE.Mesh(new THREE.RingGeometry(4.5, 4.54, 64), new THREE.MeshBasicMaterial({ color: 0xa855f7, side: THREE.DoubleSide, transparent: true, opacity: 0.4 }));
+                ring2.rotation.x = Math.PI / 4;
+                aCurrentGroup.add(ring2);
+                for (let i = 0; i < 4; i++) {
+                    const e = new THREE.Mesh(new THREE.SphereGeometry(0.25, 16, 16), new THREE.MeshBasicMaterial({ color: 0xa855f7 }));
+                    e.userData = { angle: (i * Math.PI) / 2, speed: 0.03, radius: 4.52, tilt: Math.PI / 4 };
+                    aElectrons.push(e);
+                    aCurrentGroup.add(e);
+                }
+
+            } else if (type === 'O') {
+                dispTitle.innerText = "Oxygen Atom (O)";
+                dispDetail.innerText = "Atomic Number: 8 | Protons: 8 | Neutrons: 8 | Electrons: 8 (2 in 1st shell, 6 in 2nd shell)";
+
+                // Nucleus cluster
+                for (let i = 0; i < 16; i++) {
+                    const isProton = i % 2 === 0;
+                    const m = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.48, 16, 16),
+                        new THREE.MeshStandardMaterial({ color: isProton ? 0xef4444 : 0x64748b, roughness: 0.3 })
+                    );
+                    m.position.set((Math.random() - 0.5) * 1.5, (Math.random() - 0.5) * 1.5, (Math.random() - 0.5) * 1.5);
+                    aCurrentGroup.add(m);
+                }
+
+                // Shells
+                const ring1 = new THREE.Mesh(new THREE.RingGeometry(2.8, 2.84, 64), new THREE.MeshBasicMaterial({ color: 0x00f3ff, side: THREE.DoubleSide, transparent: true, opacity: 0.4 }));
+                aCurrentGroup.add(ring1);
+                for (let i = 0; i < 2; i++) {
+                    const e = new THREE.Mesh(new THREE.SphereGeometry(0.25, 16, 16), new THREE.MeshBasicMaterial({ color: 0x00f3ff }));
+                    e.userData = { angle: i * Math.PI, speed: 0.05, radius: 2.82, tilt: 0 };
+                    aElectrons.push(e);
+                    aCurrentGroup.add(e);
+                }
+
+                const ring2 = new THREE.Mesh(new THREE.RingGeometry(4.8, 4.84, 64), new THREE.MeshBasicMaterial({ color: 0xef4444, side: THREE.DoubleSide, transparent: true, opacity: 0.4 }));
+                ring2.rotation.y = Math.PI / 4;
+                aCurrentGroup.add(ring2);
+                for (let i = 0; i < 6; i++) {
+                    const e = new THREE.Mesh(new THREE.SphereGeometry(0.25, 16, 16), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
+                    e.userData = { angle: (i * Math.PI) / 3, speed: 0.035, radius: 4.82, tilt: Math.PI / 4 };
+                    aElectrons.push(e);
+                    aCurrentGroup.add(e);
+                }
+            }
+        }
+
+        function renderMoleculeModel(compound) {
+            clearAtomScene();
+            playTone(680, 0.15);
+
+            const dispTitle = document.getElementById('atom-name-display');
+            const dispDetail = document.getElementById('atom-detail-display');
+            const targetEl = document.getElementById('compound-target');
+            const specEl = document.getElementById('compound-spec');
+
+            if (compound === 'H2O') {
+                dispTitle.innerText = "Water Molecule (H₂O)";
+                dispDetail.innerText = "1 Oxygen Atom (Red) chemically bonded to 2 Hydrogen Atoms (White). Bent angle ~104.5°";
+                targetEl.innerText = "Water Molecule (H₂O)";
+                specEl.innerText = "Formula: H₂O | Bonding: Polar Covalent | Ratio: 2 H : 1 O | State at 25°C: Liquid";
+
+                // Central Oxygen
+                const o = new THREE.Mesh(new THREE.SphereGeometry(1.3, 32, 32), new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.2 }));
+                aCurrentGroup.add(o);
+
+                // Two Hydrogens
+                const h1 = new THREE.Mesh(new THREE.SphereGeometry(0.75, 32, 32), new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3 }));
+                h1.position.set(-2.2, -1.2, 0);
+                aCurrentGroup.add(h1);
+
+                const h2 = new THREE.Mesh(new THREE.SphereGeometry(0.75, 32, 32), new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3 }));
+                h2.position.set(2.2, -1.2, 0);
+                aCurrentGroup.add(h2);
+
+                // Bonds (Cylinders)
+                const bondGeo = new THREE.CylinderGeometry(0.12, 0.12, 2.4);
+                const bondMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8 });
+                const b1 = new THREE.Mesh(bondGeo, bondMat);
+                b1.position.set(-1.1, -0.6, 0);
+                b1.rotation.z = Math.PI / 3;
+                aCurrentGroup.add(b1);
+
+                const b2 = new THREE.Mesh(bondGeo, bondMat);
+                b2.position.set(1.1, -0.6, 0);
+                b2.rotation.z = -Math.PI / 3;
+                aCurrentGroup.add(b2);
+
+            } else if (compound === 'CO2') {
+                dispTitle.innerText = "Carbon Dioxide Molecule (CO₂)";
+                dispDetail.innerText = "1 Central Carbon Atom (Grey) double-bonded to 2 Oxygen Atoms (Red). Linear 180°";
+                targetEl.innerText = "Carbon Dioxide (CO₂)";
+                specEl.innerText = "Formula: CO₂ | Bonding: Double Covalent | Ratio: 1 C : 2 O | State at 25°C: Gas";
+
+                const c = new THREE.Mesh(new THREE.SphereGeometry(1.2, 32, 32), new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.3 }));
+                aCurrentGroup.add(c);
+
+                const o1 = new THREE.Mesh(new THREE.SphereGeometry(1.0, 32, 32), new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.2 }));
+                o1.position.set(-3.0, 0, 0);
+                aCurrentGroup.add(o1);
+
+                const o2 = new THREE.Mesh(new THREE.SphereGeometry(1.0, 32, 32), new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.2 }));
+                o2.position.set(3.0, 0, 0);
+                aCurrentGroup.add(o2);
+
+            } else if (compound === 'NaCl') {
+                dispTitle.innerText = "Sodium Chloride Crystal Lattice (NaCl)";
+                dispDetail.innerText = "Ionic Compound: Sodium Ion Na+ (Green) + Chloride Ion Cl- (Purple) in 1:1 Ratio";
+                targetEl.innerText = "Table Salt (NaCl)";
+                specEl.innerText = "Formula: NaCl | Bonding: Ionic Crystal | Ratio: 1 Na : 1 Cl | State at 25°C: Solid Crystal";
+
+                const na = new THREE.Mesh(new THREE.SphereGeometry(1.0, 32, 32), new THREE.MeshStandardMaterial({ color: 0x10b981 }));
+                na.position.set(-1.8, 0, 0);
+                aCurrentGroup.add(na);
+
+                const cl = new THREE.Mesh(new THREE.SphereGeometry(1.4, 32, 32), new THREE.MeshStandardMaterial({ color: 0xa855f7 }));
+                cl.position.set(1.8, 0, 0);
+                aCurrentGroup.add(cl);
+            }
+        }
+
+        function animateAtomLab() {
+            requestAnimationFrame(animateAtomLab);
+
+            // Rotate electron positions along orbital paths
+            aElectrons.forEach(e => {
+                e.userData.angle += e.userData.speed;
+                const r = e.userData.radius;
+                const a = e.userData.angle;
+                e.position.x = Math.cos(a) * r;
+                e.position.y = Math.sin(a) * r * Math.cos(e.userData.tilt);
+                e.position.z = Math.sin(a) * r * Math.sin(e.userData.tilt);
+            });
+
+            if (aCurrentGroup) {
+                aCurrentGroup.rotation.y += 0.005;
+            }
+
+            if (aRenderer && aScene && aCamera) {
+                aRenderer.render(aScene, aCamera);
+            }
+        }
+
+        /* --------------------------------------------------
+           LAB 5B: INTERACTIVE PHYSICAL SEPARATION SLIDER
+        -------------------------------------------------- */
+        const magnetSlider = document.getElementById('magnet-slider');
+        if (magnetSlider) {
+            magnetSlider.addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value);
+                document.getElementById('magnet-power-val').innerText = `${val}%`;
+                
+                const magnet = document.getElementById('virtual-magnet');
+                const filings = document.getElementById('iron-filings');
+
+                if (magnet && filings) {
+                    magnet.style.transform = `scale(${1 + val * 0.002})`;
+                    filings.style.transform = `translateX(-${val * 1.5}px)`;
+                    
+                    if (val > 75) {
+                        filings.style.color = '#00f3ff';
+                        if (val === 100) playTone(750, 0.1);
+                    } else {
+                        filings.style.color = '#e2e8f0';
+                    }
+                }
+            });
+        }
+
+        /* --------------------------------------------------
+           MODULE 6: INTERACTIVE ASSESSMENT EVALUATION LOGIC
+        -------------------------------------------------- */
+        let score = 0;
+        const answered = {};
+
+        function checkAnswer(btn, isCorrect, qId, feedback) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+
+            const feedbackEl = document.getElementById(`feedback-${qId}`);
+            if (feedbackEl) {
+                feedbackEl.classList.remove('hidden');
+                feedbackEl.innerText = feedback;
+            }
+
+            if (isCorrect) {
+                btn.className = "p-3.5 rounded-xl bg-emerald-500/20 border-2 border-emerald-500 text-left text-emerald-300 font-bold transition";
+                if (feedbackEl) {
+                    feedbackEl.className = "text-xs font-mono p-3 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-emerald-300 mt-2";
+                }
+                score++;
+                document.getElementById('quiz-score').innerText = score;
+                const navScore = document.getElementById('nav-score');
+                if (navScore) navScore.innerText = `${score} / 6`;
+                playTone(840, 0.2);
+            } else {
+                btn.className = "p-3.5 rounded-xl bg-red-500/20 border-2 border-red-500 text-left text-red-300 font-bold transition";
+                if (feedbackEl) {
+                    feedbackEl.className = "text-xs font-mono p-3 rounded-xl bg-red-950/50 border border-red-500/40 text-red-300 mt-2";
+                }
+                playTone(220, 0.3);
+            }
+        }
+
+        /* --------------------------------------------------
+           BACKGROUND VIDEO TOGGLE
+        -------------------------------------------------- */
+        let bgVideoPlaying = true;
+        function toggleBgVideo() {
+            const video = document.getElementById('bg-video');
+            const container = document.getElementById('video-bg-container');
+            const label = document.getElementById('bg-video-label');
+            if (!video) return;
+
+            if (bgVideoPlaying) {
+                video.pause();
+                container.style.opacity = '0';
+                if (label) label.innerText = 'BG: Off';
+                bgVideoPlaying = false;
+            } else {
+                video.play();
+                container.style.opacity = '1';
+                if (label) label.innerText = 'BG: On';
+                bgVideoPlaying = true;
+            }
+        }
+
+        /* --------------------------------------------------
+           INITIALIZE ALL MODULE LABS ON WINDOW LOAD
+        -------------------------------------------------- */
+        window.addEventListener('load', () => {
+            initParticleLab();
+            initHeatingCurve();
+            initWaterCycleLab();
+            initRainWaterCycleActivity();
+            initAtomLab();
+        });
+
+        // Resize listeners for all 3D WebGL canvases
+        window.addEventListener('resize', () => {
+            // Lab 1
+            const c1 = document.getElementById('particle-canvas-container');
+            if (c1 && pCamera && pRenderer) {
+                pCamera.aspect = c1.clientWidth / c1.clientHeight;
+                pCamera.updateProjectionMatrix();
+                pRenderer.setSize(c1.clientWidth, c1.clientHeight);
+            }
+            // Lab 2
+            const c2 = document.getElementById('watercycle-canvas-container');
+            if (c2 && wCamera && wRenderer) {
+                wCamera.aspect = c2.clientWidth / c2.clientHeight;
+                wCamera.updateProjectionMatrix();
+                wRenderer.setSize(c2.clientWidth, c2.clientHeight);
+            }
+            // Lab 3
+            const c3 = document.getElementById('atom-canvas-container');
+            if (c3 && aCamera && aRenderer) {
+                aCamera.aspect = c3.clientWidth / c3.clientHeight;
+                aCamera.updateProjectionMatrix();
+                aRenderer.setSize(c3.clientWidth, c3.clientHeight);
+            }
+            // 2D Canvas
+            drawHeatingCurve();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+ELEMENTIA — Game Design & Story Prompt
+
+A 3D adventure game for NCERT Grade 6 Science — Unit: Materials and Their Structure
+
+Use this document as a creative brief: hand it to a game writer, a level designer, or an AI generation tool to produce the full game. Every level maps to one NCERT sub-topic, every activity teaches one real concept, and every point value is spelled out so scoring can be built exactly as described.
+
+1. The World and Its People
+
+Setting — The Matterlight Isles: a cluster of floating islands connected by a Knowledge Bridge, home to the Academy of Wonders and Wisdom. Each island holds one kind of matter-magic, and the Bridge itself is broken into pieces — one piece repairs and lights up every time the player restores an island. The player watches their own progress rebuild the world in real time.
+
+The Inciting Incident — The Great Unraveling: A trickster spirit called the Muddler — who loves mixing things up "just for the fun of it" and hates rules — has scrambled the Isles. Solids have melted into puddles at random, gases have escaped their bottles, the periodic archive has been shuffled like a deck of cards, and compounds have been shaken back into confused piles of loose elements. Nothing is dangerous or scary; it's chaotic and a little funny — the Muddler isn't a villain so much as an overgrown prankster who's never had anyone explain why the rules of matter exist.
+
+The two mentors, who travel with the player everywhere:
+
+Zephyr, the Magician — theatrical, quick, delighted by wonder. Zephyr always leaps to a dazzling demonstration first: ice vanishing into water, a coin passing through a "solid" wall. Zephyr represents curiosity and observation — noticing that something amazing just happened.
+
+Professor Nova, the Scientist — calm, precise, endlessly asks "but why?" Nova never dismisses Zephyr's magic — instead, Nova explains the real mechanism behind it, turning the trick into understanding. Nova represents evidence and explanation.
+
+The throughline the whole game teaches: every piece of "magic" in the Isles has a real explanation — and once you know it, you can do the magic yourself, on purpose, reliably. Zephyr shows the wonder. Nova shows the reason. The player needs both to win.
+
+The player is a new Apprentice Explorer, custom-named and dressed at the start, who carries a Lumen Satchel — the in-world object that holds every collectible, badge and tool earned in the game.
+
+2. How Scoring Works (the actual points)
+
+One universal currency ties the whole game together: Insight Points (IP).
+
+Every level also drops a level-themed collectible (Material Marks, State Stars, and so on) — these are IP in a costume, so each realm still feels distinct, but they all add to the same running total.
+
+Correct action: +10 IP
+
+Correct on the first try (no hints used): +5 IP bonus ("Discovery Bonus")
+
+Explaining why correctly, not just doing the action correctly (Nova's signature challenge, present in every level): +20 IP ("Scientist's Proof")
+
+Choosing evidence over assumption at a decision point (see Section 4): +15 IP ("Wisdom Bonus")
+
+Wrong attempt: no points lost — the attempt simply "fizzles" harmlessly and Zephyr jokes about it, then Nova offers a clue. Failure is never punishing, only informative.
+
+Rank titles, unlocked automatically as total IP climbs — shown as a title beneath the player's name and as a change in their cloak's shimmer:
+
+IP earned
+
+Rank
+
+0
+
+Apprentice Explorer
+
+500
+
+Adept of Matter
+
+1,200
+
+Realm Restorer
+
+2,000
+
+Sage of the Isles
+
+3,000+ (all islands restored)
+
+Grandmaster of Elementia
+
+At the end of each level, a Realm Report pops up like a page turning in a spellbook: what was learned, IP earned this level, and the running total — giving a visible, tangible sense of progress after every session.
+
+3. Level-by-Level Progression
+
+Level 1 — The Whispering Workshop
+
+NCERT focus: Materials and Their Structure
+
+Zephyr and Nova welcome the player to the Academy workshop, cluttered with wood, stone, cloth, glass, metal and rubber samples the Muddler has knocked off their shelves. Zephyr hands the player their first tool: the Insight Lens, a magic spyglass that, when pointed at any object, zooms in dramatically to reveal it's built from countless tiny moving particles too small to see — the first "wow" reveal of the game.
+
+Activity: Sort scattered materials into glowing crates labelled by property (hard/soft, flexible/rigid, see-through/opaque, sinks/floats). Getting a sort right makes the crate chime and glow; the whole workshop visibly tidies itself as crates fill.
+
+Points: +10 IP per correct sort, +5 Discovery Bonus for first-try sorts, +20 Scientist's Proof for correctly explaining why a material was sorted that way (e.g., "glass is see-through because light passes straight through its particles").
+
+Real-world reflection: the sorting criteria the player uses are the same ones engineers use to choose materials for real objects — a window, a shoe sole, a raincoat — so the level closes with Nova asking the player to pick the right material for a simple real object, tying the abstract sort to a concrete design choice.
+
+Level 2 — The Shifting Caverns
+
+NCERT focus: Solids, Liquids and Gases
+
+A cave system where the floor is solid rock, an underground river runs liquid, and glowing gas pockets drift and expand to fill every gap. The Muddler has jammed three magic gates shut, each requiring the player to understand one state.
+
+Activity: At each gate, the Insight Lens reveals the particles of that substance — packed and vibrating in place (solid), close together but sliding past each other (liquid), or spread far apart and moving freely (gas). The player must arrange a floating particle-diagram puzzle to match what the Lens showed before the gate will open.
+
+Points: +10 IP per correctly arranged diagram, +20 Scientist's Proof for correctly explaining why that state has that shape/volume behaviour (fixed shape and volume; fixed volume but takes the shape of its container; no fixed shape or volume).
+
+Real-world reflection: at the liquid gate, the player is offered Zephyr's quick trick — "just guess the pattern, it usually works" — versus Nova's method — "observe the particles first, then decide." Choosing Nova's method earns the Wisdom Bonus and is visibly more reliable across the level, quietly rewarding the evidence-based choice without ever punishing curiosity.
+
+Level 3 — The Alchemist's Forge
+
+NCERT focus: Changes of State
+
+A working forge where the Muddler has left blocked passages that can only be crossed by deliberately changing a material's state: melt a metal bar to pour it into a mould and cast a key, freeze a rope-bridge of water across a chasm, evaporate a cloudy liquid to purify it into a clear one for a locked door.
+
+Activity: The player controls a heat dial. Before touching the dial, they must predict what will happen (melt / freeze / evaporate / condense) by choosing from Zephyr's suggestions — then test it. Correct predictions light up gold; incorrect ones simply show what really happened, with Nova explaining the mismatch.
+
+Points: +10 IP for successfully changing the state to solve the puzzle, +20 Scientist's Proof for a correct prediction made before acting (this level rewards predicting over guessing-after-the-fact).
+
+Real-world reflection: the forge tasks mirror real processes — casting metal tools, making ice for cold storage, purifying water by evaporation — and the Realm Report explicitly connects each puzzle to its real-world equivalent ("you just did, in miniature, what a foundry does with molten metal").
+
+Level 4 — The Particle Observatory
+
+NCERT focus: Explaining Changes of State
+
+A domed planetarium-like chamber where Nova takes the lead. Turning a great Energy Dial makes the ceiling fill with a shimmering vision of particles speeding up, slowing down, spreading apart or pulling close — the "why" behind everything the player did in the Forge.
+
+Activity: The player is shown a change (melting ice, boiling water, a puddle vanishing) and must select, from several particle-motion animations, the one that correctly shows what's happening to the energy and the particles — then write a one-line explanation using given key terms (energy, particles, closer together / further apart, faster / slower).
+
+Points: +15 IP for the correct animation, +20 Scientist's Proof for the correct one-line explanation — this level is explanation-only, no points at all are given for a correct animation paired with a wrong explanation, reinforcing that understanding why is the actual goal, not just recognising what.
+
+Real-world reflection: the level ends with Nova asking the player to explain, in their own words, a change of state they've seen at home (steam on a mirror, ice melting in a drink) — a personal, real-world echo of the abstract particle theory just learned.
+
+Level 5 — Skybound Falls
+
+NCERT focus: The Water Cycle
+
+The tone shifts to open and airy: the player follows a single animated water droplet — Drip — on a journey across the whole island chain, from ocean to cloud to mountain to river and back again. This is the game's biggest visual set-piece: the player literally rides the water cycle.
+
+Activity: at each stage, a short challenge keeps the droplet moving correctly through the cycle — help the sun warm the ocean surface until Drip evaporates and rises, guide the rising vapour until it cools and condenses into a cloud, help the cloud grow heavy enough to release Drip as rain over the mountains, then choose Drip's path down through streams back to the sea.
+
+Points: +10 IP per correctly completed stage (evaporation, condensation, precipitation, collection), +20 Scientist's Proof for correctly naming the stage and its cause (the sun's heat, cooling air, gravity) when asked by Nova along the way.
+
+Real-world reflection: at the final stage, the player chooses Drip's path — straight back to the sea, or diverted through farmland fields first. Diverting Drip through the fields costs a few seconds of extra gameplay but earns a Guardian of the Cycle bonus (+15 IP) and visibly greens the fields on the map, a direct, simplified stand-in for real-world water use and conservation choices.
+
+Level 6 — The Halls of a Thousand Elements
+
+NCERT focus: Atoms, Elements and the Periodic Table
+
+A vast archive of floating tiles — the Great Periodic Compass — that the Muddler has thrown into disorder. Guardian spirits of the archive, each representing a family of elements (metals, non-metals, gases), have lost track of their tiles.
+
+Activity: the player is given element cards (name, symbol, a real everyday fact — e.g. oxygen, O, the gas we breathe; carbon, C, found in every living thing; iron, Fe, used to make steel) and must return each tile to its correct guardian and correct place on the Compass, learning that an element is a pure substance made of only one kind of atom, and that its symbol is a kind of shorthand name.
+
+Points: +10 IP per correctly placed tile, +5 Discovery Bonus for placing it correctly without checking the fact card first, +20 Scientist's Proof for correctly explaining what makes something an element rather than something else.
+
+Real-world reflection: each returned tile briefly shows the player a real object made from or containing that element (a copper wire, a helium balloon, an aluminium can) — grounding the abstract idea of "element" in objects the player already knows.
+
+Level 7 — The Bonding Bazaar
+
+NCERT focus: Compounds and Formulae
+
+A bustling magical marketplace of stalls, each run by a "Bonding Merchant" who only accepts payment in the exact combination of elements a formula demands. This is where the game's chemistry starts to feel like spellcasting with real rules.
+
+Activity: the player is given a formula (e.g. H₂O, CO₂) and a tray of loose element tokens, and must place the correct number of each token onto the stall's counter. A correct combination causes a small, satisfying transformation — hydrogen and oxygen tokens swirl together into a shimmering droplet of water — while an incorrect ratio simply fizzles gently and resets.
+
+Points: +10 IP per correct formula assembled, +20 Scientist's Proof for correctly explaining that a compound's properties (like water, wet and drinkable) are different from the properties of the elements that formed it (hydrogen and oxygen, both gases).
+
+Real-world reflection: the level closes with Nova pointing out that the water the player just "brewed" is the same water in their own drinking cup — the formula isn't a game rule, it's the actual recipe for a real substance.
+
+Level 8 — The Great Separation Chamber (Finale)
+
+NCERT focus: Compounds and Mixtures
+
+The climax. The Muddler is finally found here, sitting happily inside a swirling, chaotic pile of sand, salt, water, iron filings and oil — the very heart of the Great Unraveling — insisting it's the "best magic ever" because nothing has any rules. To restore the Isles for good, the player must show the Muddler that taking things apart correctly is its own kind of wonder.
+
+Activity: the player is handed real separation tools, reframed as spellcraft — a sieve, a magnet, a filter, a gentle evaporating flame — and must choose the right tool for each part of the Muddler's pile (a magnet lifts the iron filings; a filter catches the sand; gentle heat evaporates the water, leaving the salt behind). Along the way, Nova has the player sort each material first into mixture or compound, since only mixtures can be separated this way.
+
+Points: +15 IP per correct separation step, +20 Scientist's Proof per correct mixture/compound classification, and a one-time Harmony Shard bonus of +100 IP for successfully restoring the whole pile — the single biggest reward in the game.
+
+Real-world reflection: every separation method used here is a real one (filtration, magnetic separation, evaporation) used in kitchens, water treatment plants and recycling centres — Nova's closing line makes that link explicit, and the Muddler, delighted rather than defeated, joins the Academy as a permanently reformed, slightly chaotic mascot.
+
+4. Choice Moments — How Play Reflects Real Thinking
+
+Scattered through the levels (not just Level 2 and Level 5, which are detailed above) are small Zephyr-or-Nova decision points: a fast, flashy option that sometimes works, versus a slower, evidence-based option that reliably works. These are never framed as "the magician is wrong" — Zephyr's tricks always work eventually, through trial and error — but Nova's method gets there in fewer tries and awards the Wisdom Bonus. Over the course of the game this quietly builds the real habit the unit is meant to teach: notice something interesting, then ask why, then test it — rather than accept the first flashy explanation.
+
+5. What Should Make Students Say "Wow"
+
+The Isles physically heal as levels are completed — cracked bridges reseal, grey patches regain colour — so progress is something the player sees across the whole world, not just a number going up.
+
+Level 5's water-droplet journey is designed as the visual high point of the game: riding the water cycle across open sky, cloud and mountain rather than reading about it.
+
+Level 7's bonding transformations — elements swirling together into a new substance — are built to feel like casting a spell, with the payoff being that the "spell" is real chemistry.
+
+The Muddler's arc, from prankster to reformed mascot, gives the whole unit an emotional close rather than ending on a quiz.
+
+The Realm Report after every level turns assessment into a satisfying storybook moment instead of a test result.
+
+6. Quick Reference Table
+
+Level
+
+Realm
+
+NCERT Topic
+
+Core Activity
+
+Signature Reward
+
+1
+
+The Whispering Workshop
+
+Materials and Their Structure
+
+Sort materials by property
+
+Discovery Bonus
+
+2
+
+The Shifting Caverns
+
+Solids, Liquids and Gases
+
+Match particle arrangement to state
+
+Wisdom Bonus
+
+3
+
+The Alchemist's Forge
+
+Changes of State
+
+Predict, then trigger, a state change
+
+Scientist's Proof
+
+4
+
+The Particle Observatory
+
+Explaining Changes of State
+
+Match energy/particle animation + explain
+
+Explanation-only scoring
+
+5
+
+Skybound Falls
+
+The Water Cycle
+
+Guide a droplet through the full cycle
+
+Guardian of the Cycle bonus
+
+6
+
+The Halls of a Thousand Elements
+
+Atoms, Elements and the Periodic Table
+
+Return element tiles to the Compass
+
+Real-object reveals
+
+7
+
+The Bonding Bazaar
+
+Compounds and Formulae
+
+Assemble correct element ratios
+
+Formula transformations
+
+8
+
+The Great Separation Chamber
+
+Compounds and Mixtures
+
+Separate a mixture; classify along the way
+
+Harmony Shard (+100 IP)

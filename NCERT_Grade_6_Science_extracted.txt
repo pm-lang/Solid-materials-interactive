@@ -1,0 +1,89 @@
+1SOLIDS, LIQUIDS, AND GASES
+All matter in the universe is made of microscopic particles. The arrangement and motion of these particles dictate whether a
+material is a solid, liquid, or gas.
+2CHANGES OF STATE & ENERGY TRANSITIONS
+Phase changes are physical transformations caused by adding or removing thermal energy (heat). Kinetic energy alters
+particle movement without changing chemical identity.
+Key Rule: Thermal energy directly increases the kinetic speed of particles. When heat energy overcomes intermolecular
+attractive forces, a state change occurs. Temperature stays constant during a phase transition!
+NCERT Science Grade 6 • Unit: Materials & Structure
+ PAGE 1 OF 3
+NCERT GRADE 6 SCIENCE
+Unit Interactive Visual Study Guide & Simulation Deck
+SYSTEM STATE
+ONLINE v2.4
+SOLID STATE
+ FIXED SHAPE
+Particles tightly packed in a regular lattice.
+Strong force of attraction; vibrate in fixed
+positions.
+PARTICLE SIMULATOR300 K
+LIQUID STATE FLOWS
+Particles close together but not in fixed
+positions. Slide past one another; takes
+container shape.
+PARTICLE SIMULATOR350 K
+GAS STATE EXPANDS
+Particles far apart with high kinetic energy.
+Negligible forces; fill any volume completely.
+PARTICLE SIMULATOR450 K
+THERMAL DYNAMICS CONTROL LOOP STATE TRANSITION ENGINE
+SOLID
+(Ice / Low Energy)LIQUID
+(Water / Mid Energy)GAS
+(Steam / High Energy)MELTING (+Heat) BOILING (+Heat)
+FREEZING (-Heat) CONDENSATION (-Heat)SUBLIMATION (Solid directly to Gas)
+
+--- PAGE BREAK ---
+
+3THE PLANETARY WATER CYCLE
+Earth's water cycle is a massive global heat engine demonstrating phase changes on a planetary scale powered by solar
+radiation.
+4ATOMS, ELEMENTS & THE PERIODIC TABLE
+An atom is the smallest fundamental unit of matter. An element is a pure substance consisting of only one type of atom.
+NCERT Science Grade 6 • Unit: Materials & Structure
+ PAGE 2 OF 3
+ENVIRONMENTAL SYSTEM SIMULATION TERRAFORM PROTOCOL
+1. EVAPORATION2. CONDENSATION
+3. PRECIPITATION
+4. SURFACE RUNOFF
+ATOMIC ARCHITECTURE
+Nucleus contains Protons (+) & Neutrons (0). Electrons (-) orbit in
+surrounding energy shells.
+PERIODIC TABLE CARDS
+1
+H
+Hydrogen
+1.0088
+O
+Oxygen
+15.9996
+C
+Carbon
+12.011
+
+--- PAGE BREAK ---
+
+5COMPOUNDS, FORMULAE & MIXTURES
+Matter combines chemically or physically. Understanding the boundary between compounds and mixtures is fundamental to
+chemistry.
+DIAGNOSTIC MATRIX: COMPOUNDS VS. MIXTURES
+Feature Profile Chemical Compound Physical Mixture
+Composition Elements bonded in strict fixed ratios (e.g., CO2) Substances mixed in any arbitrary proportion
+Chemical PropertiesCompletely distinct from parent elements Retains individual properties of components
+Separation MethodRequires chemical reaction / electrolysis Separable via filtration, evaporation, magnets
+Energy Input Heat/light often absorbed/released during formationNo chemical energy exchange during mixing
+Examples Pure Water (H2O), Salt (NaCl) Air, Saltwater, Sand + Iron filings
+NCERT Science Grade 6 • Unit: Materials & Structure
+ PAGE 3 OF 3
+3D MOLECULAR SYNTHESIZER HUD TARGET: WATER MOLECULE (H2O)
+O
+H HMOLECULAR SPECIFICATIONS
+Formula: H₂O
+Bonding Type: Covalent
+Ratio: 2 Hydrogen : 1 Oxygen
+State at 25°C: Liquid
+SUMMARY LAB QUEST OBJECTIVES COMPLETED
+Matter shifts between Solid, Liquid, and Gas states through thermal kinetic changes.
+The Water Cycle continuously recycles Earth's liquid through Evaporation, Condensation, and Precipitation.
+Atoms build Elements, which combine chemically to form Compounds or physically to form Mixtures.
