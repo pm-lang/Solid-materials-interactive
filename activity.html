@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matter Masters — IB Science Ultimate Quest (Dual-Panel Board Game)</title>
+  <meta name="description" content="Authentic board game with stepping-stone path, visible 3D pawns, dual dice panels, and split-screen head-to-head science duels.">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            quest: {
+              bg: '#eef6fc',
+              blue: '#0284c7',
+              red: '#e11d48',
+              gold: '#d97706',
+              purple: '#9333ea',
+              emerald: '#16a34a'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['Fira Code', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Three.js CDN & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Spline 3D Web Component Viewer -->
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@latest/build/spline-viewer.js"></script>
+
+  <!-- Quest Stylesheet -->
+  <link rel="stylesheet" href="src/activity.css">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-sky-50 via-amber-50/40 to-blue-100 text-slate-800 relative flex flex-col justify-between">
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Top Quest Banner & Mascot HUD (Matter Masters Daylight Theme) -->
+  <header class="sticky top-0 z-40 quest-glass border-b border-cyan-500/30 px-4 py-2.5 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand & Mascot Intro -->
+      <div class="flex items-center space-x-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-cyan-500/30 text-2xl animate-bounce">
+          ⚛️
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-cyan-100 text-cyan-800 border border-cyan-400">IB SCIENCE</span>
+            <span class="text-xs text-slate-600 font-medium">Explore • Experiment • Compete</span>
+          </div>
+          <h1 class="text-lg sm:text-xl font-black tracking-tight text-amber-600 glow-gold font-mono">
+            MATTER MASTERS
+          </h1>
+        </div>
+      </div>
+
+      <!-- Mascot Guidance Speech Bubble -->
+      <div class="hidden lg:flex items-center space-x-2.5 px-4 py-1.5 rounded-2xl bg-white/95 border border-cyan-400/40 text-xs max-w-md shadow-sm">
+        <span class="text-2xl animate-pulse">🤖</span>
+        <p class="text-slate-700 text-[11px] leading-tight">
+          <strong class="text-blue-600 font-bold">Welcome, Science Cadet!</strong> "Complete all 8 missions and earn the Science Crystal!"
+        </p>
+      </div>
+
+      <!-- Right Action Utilities -->
+      <div class="flex items-center space-x-2 ml-auto">
+        <div id="active-turn-banner"></div>
+        <a href="index.html" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-xs font-bold text-slate-700 transition-all hover:border-cyan-500 shadow-sm">
+          <i class="fa-solid fa-flask text-cyan-600"></i>
+          <span>Study Lab</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Game World: Dual Panels + Center Map -->
+  <main class="max-w-7xl w-full mx-auto px-4 py-4 grid grid-cols-1 lg:grid-cols-12 gap-4 flex-grow">
+    
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- LEFT PANEL: PLAYER 1 / BLUE TEAM (DICE & CONTROLS)          -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <aside class="lg:col-span-3 quest-glass-blue rounded-3xl p-4 sm:p-5 flex flex-col justify-between space-y-4">
+      <div class="space-y-4">
+        
+        <!-- Team Header -->
+        <div class="flex items-center justify-between border-b border-cyan-300 pb-3">
+          <div class="flex items-center space-x-2.5">
+            <span class="w-4 h-4 rounded-full bg-cyan-500 shadow-md shadow-cyan-500/50"></span>
+            <div>
+              <h2 class="text-base font-black text-blue-700 glow-blue font-mono">BLUE TEAM</h2>
+              <span class="text-[10px] font-mono text-cyan-700 font-semibold">Solids & Water Cadets</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="blue-panel-xp" class="text-2xl font-black font-mono text-blue-600">150 XP</span>
+          </div>
+        </div>
+
+        <!-- 3D Rolling Dice Box -->
+        <div class="p-4 rounded-2xl bg-white border-2 border-cyan-300 shadow-md flex flex-col items-center justify-center space-y-3">
+          <span class="text-[11px] font-mono text-slate-500 font-bold uppercase">Player 1 Dice</span>
+          <div id="blue-dice-cube" class="dice-cube border-2 border-cyan-400 text-blue-600">
+            6
+          </div>
+          <button id="blue-roll-btn" onclick="rollDiceForPlayer(1)" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-black text-sm shadow-md shadow-cyan-500/30 hover:brightness-110 flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-dice text-lg"></i>
+            <span>ROLL DICE (Key A)</span>
+          </button>
+        </div>
+
+        <!-- Tile Position Indicator -->
+        <div class="p-3 rounded-xl bg-white border border-slate-200 space-y-1 text-xs shadow-sm">
+          <div class="text-slate-500 font-mono">Pawn Position:</div>
+          <div id="blue-panel-pos" class="font-bold text-blue-700 text-sm">Tile 0: START</div>
+        </div>
+
+        <!-- Power-Up Deck -->
+        <div class="p-3 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+          <span class="text-[10px] font-mono text-slate-500 font-bold uppercase">Active Power-Ups:</span>
+          <button onclick="activatePowerUp(1, 'double')" class="w-full p-2.5 rounded-lg bg-sky-50 border border-cyan-300 hover:bg-sky-100 text-blue-700 text-xs font-bold flex items-center justify-between transition">
+            <span>⚡ 2x Double Points</span>
+            <span class="text-[10px] font-mono text-slate-500">Ready</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Controls Note -->
+      <div class="text-[10px] font-mono text-slate-500 text-center border-t border-slate-200 pt-2">
+        <i class="fa-regular fa-keyboard mr-1"></i> Player 1: Press <strong class="text-blue-600">A</strong> or <strong class="text-blue-600">Space</strong> to Roll
+      </div>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- CENTER: THE INTERACTIVE STEPPING STONE BOARD GAME           -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <section class="lg:col-span-6 flex flex-col justify-between space-y-3">
+      
+      <!-- Interactive 3D Floating Island Board Model -->
+      <div class="board-container w-full relative h-[600px] rounded-3xl overflow-hidden shadow-xl border-2 border-cyan-400/50 bg-sky-100">
+        <!-- 3D WebGL Canvas -->
+        <canvas id="board-3d-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+
+        <!-- 3D Camera Controls Toolbar (Top-Right) -->
+        <div class="absolute top-3 right-3 flex items-center space-x-1.5 z-20">
+          <button onclick="resetIslandCamera('iso')" class="px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-cyan-400 text-blue-700 text-xs font-mono font-bold flex items-center space-x-1 shadow-md transition" title="Reset Isometric Overview">
+            <i class="fa-solid fa-cube text-[10px]"></i>
+            <span>3D Overview</span>
+          </button>
+          <button onclick="resetIslandCamera('academy')" class="px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-slate-300 text-slate-700 text-xs font-mono font-bold flex items-center space-x-1 shadow-md transition" title="Focus Science Academy">
+            <i class="fa-solid fa-landmark text-[10px]"></i>
+            <span>Academy</span>
+          </button>
+          <button onclick="resetIslandCamera('crystal')" class="px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-purple-400 text-purple-700 text-xs font-mono font-bold flex items-center space-x-1 shadow-md transition" title="Focus Science Crystal">
+            <i class="fa-solid fa-gem text-[10px]"></i>
+            <span>Crystal</span>
+          </button>
+        </div>
+
+        <!-- 3D Orbiting Help Badge (Top-Left) -->
+        <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/90 border border-slate-200 text-[10px] font-mono text-slate-600 z-20 flex items-center space-x-1.5 pointer-events-none shadow-sm">
+          <i class="fa-solid fa-arrows-up-down-left-right text-cyan-600"></i>
+          <span>Left-Click Drag to Orbit • Scroll to Zoom • Right-Click to Pan</span>
+        </div>
+
+        <!-- Current Target Hover Tooltip (Bottom-Left) -->
+        <div id="island-hover-badge" class="absolute bottom-3 left-3 px-3.5 py-1.5 rounded-xl bg-white/95 border-2 border-cyan-400 text-xs font-mono text-blue-700 z-20 hidden shadow-xl flex items-center space-x-2 pointer-events-none font-bold">
+          <i class="fa-solid fa-circle-dot animate-ping text-cyan-600 text-[8px]"></i>
+          <span id="island-hover-text">Station 1: Materials & Structure</span>
+        </div>
+      </div>
+
+      <!-- Clean Board Info Readout Bar -->
+      <div class="quest-glass rounded-2xl px-4 py-2.5 flex items-center justify-between text-xs shadow-sm">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-map-pin text-cyan-600"></i>
+          <div id="board-info-readout">
+            <span class="text-slate-500">Click any stepping stone to inspect tile details</span>
+          </div>
+        </div>
+        <div class="text-[11px] font-mono text-slate-500 hidden sm:block">
+          8 Station Hubs • Star Bonus Tiles • Science Crystal Citadel
+        </div>
+      </div>
+
+      <!-- Badges Rack (Collect them all!) -->
+      <div class="quest-glass rounded-2xl p-3 space-y-1.5 shadow-sm">
+        <div class="flex items-center justify-between text-xs font-mono font-bold">
+          <span class="text-slate-700 uppercase tracking-wider"><i class="fa-solid fa-medal text-amber-500 mr-1"></i> Badges Rack</span>
+          <span class="text-slate-500">Earn badges at Station Hubs</span>
+        </div>
+        <div id="badges-container" class="flex overflow-x-auto gap-2 py-1 scrollbar-none"></div>
+      </div>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- RIGHT PANEL: PLAYER 2 / RED TEAM (DICE & CONTROLS)          -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <aside class="lg:col-span-3 quest-glass-red rounded-3xl p-4 sm:p-5 flex flex-col justify-between space-y-4">
+      <div class="space-y-4">
+        
+        <!-- Team Header -->
+        <div class="flex items-center justify-between border-b border-rose-300 pb-3">
+          <div class="flex items-center space-x-2.5">
+            <span class="w-4 h-4 rounded-full bg-rose-500 shadow-md shadow-rose-500/50"></span>
+            <div>
+              <h2 class="text-base font-black text-rose-700 glow-red font-mono">RED TEAM</h2>
+              <span class="text-[10px] font-mono text-rose-700 font-semibold">Thermal & Gas Cadets</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span id="red-panel-xp" class="text-2xl font-black font-mono text-rose-600">150 XP</span>
+          </div>
+        </div>
+
+        <!-- 3D Rolling Dice Box -->
+        <div class="p-4 rounded-2xl bg-white border-2 border-rose-300 shadow-md flex flex-col items-center justify-center space-y-3">
+          <span class="text-[11px] font-mono text-slate-500 font-bold uppercase">Player 2 Dice</span>
+          <div id="red-dice-cube" class="dice-cube border-2 border-rose-400 text-rose-600">
+            6
+          </div>
+          <button id="red-roll-btn" onclick="rollDiceForPlayer(2)" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-600 to-amber-500 text-white font-black text-sm shadow-md shadow-rose-500/30 hover:brightness-110 flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-dice text-lg"></i>
+            <span>ROLL DICE (Key L)</span>
+          </button>
+        </div>
+
+        <!-- Tile Position Indicator -->
+        <div class="p-3 rounded-xl bg-white border border-slate-200 space-y-1 text-xs shadow-sm">
+          <div class="text-slate-500 font-mono">Pawn Position:</div>
+          <div id="red-panel-pos" class="font-bold text-rose-700 text-sm">Tile 0: START</div>
+        </div>
+
+        <!-- Power-Up Deck -->
+        <div class="p-3 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
+          <span class="text-[10px] font-mono text-slate-500 font-bold uppercase">Active Power-Ups:</span>
+          <button onclick="activatePowerUp(2, 'double')" class="w-full p-2.5 rounded-lg bg-rose-50 border border-rose-300 hover:bg-rose-100 text-rose-700 text-xs font-bold flex items-center justify-between transition">
+            <span>⚡ 2x Double Points</span>
+            <span class="text-[10px] font-mono text-slate-500">Ready</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Controls Note -->
+      <div class="text-[10px] font-mono text-slate-500 text-center border-t border-slate-200 pt-2">
+        <i class="fa-regular fa-keyboard mr-1"></i> Player 2: Press <strong class="text-rose-600">L</strong> or <strong class="text-rose-600">Enter</strong> to Roll
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SPLIT-SCREEN HEAD-TO-HEAD DUEL MODAL                        -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div id="duel-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xl items-center justify-center p-4"></div>
+
+  <!-- Quest Scripts -->
+  <script src="src/activity.js"></script>
+</body>
+</html>
