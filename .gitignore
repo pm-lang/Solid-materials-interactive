@@ -7,3 +7,4 @@ Thumbs.db
 .idea/
 Matter_Masters_Arena_extracted.txt
 extracted_docx_media/
+server.py
