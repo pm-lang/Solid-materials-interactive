@@ -226,7 +226,7 @@ const boardSteps = [
   { step: 22, type: 'normal', title: 'Meadow Curve 22', pos3D: { x: 7.0, y: 2.6, z: 12.5 }, label: '22' },
   { step: 23, type: 'hub', stationId: 8, title: '8. Compounds & Mixtures', pos3D: { x: 3.0, y: 2.6, z: 12.8 }, icon: 'fa-filter', color: '#eab308', badge: 'Mixture Master' },
   { step: 24, type: 'star', title: 'Academy Promenade 24', pos3D: { x: 0.0, y: 2.8, z: 9.0 }, label: '★' },
-  { step: 25, type: 'crystal', stationId: 9, title: 'SCIENCE CRYSTAL CITADEL', pos3D: { x: 0.0, y: 5.8, z: -17.5 }, icon: 'fa-gem', color: '#ffd700', badge: 'Science Champion' }
+  { step: 25, type: 'crystal', stationId: 9, title: 'SCIENCE CRYSTAL CITADEL', pos3D: { x: 0.0, y: 5.8, z: -17.5 }, icon: 'fa-gem', color: '#39ff14', badge: 'Science Champion' }
 ];
 
 const gameState = {
@@ -287,6 +287,8 @@ function init3DFloatingIsland() {
   islandRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   islandRenderer.shadowMap.enabled = true;
   islandRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  islandRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+  islandRenderer.toneMappingExposure = 1.0;
 
   // 4. OrbitControls
   if (typeof THREE.OrbitControls !== 'undefined') {
@@ -299,12 +301,12 @@ function init3DFloatingIsland() {
     islandControls.target.set(0, 3.2, 0);
   }
 
-  // 5. Bright Cheerful Daylight Lighting
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+  // 5. Bright Cheerful Daylight Lighting (Balanced to prevent overexposure)
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
   islandScene.add(ambientLight);
 
   // Main Golden Sunlight
-  const sunLight = new THREE.DirectionalLight(0xfffbeb, 1.7);
+  const sunLight = new THREE.DirectionalLight(0xfffbeb, 1.05);
   sunLight.position.set(24, 48, 22);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
@@ -319,21 +321,21 @@ function init3DFloatingIsland() {
   islandScene.add(sunLight);
 
   // Cyan Sky Fill Light
-  const skyFill = new THREE.DirectionalLight(0x38bdf8, 0.85);
+  const skyFill = new THREE.DirectionalLight(0x38bdf8, 0.45);
   skyFill.position.set(-25, 25, -20);
   islandScene.add(skyFill);
 
-  // Amethyst Crystal Sun Refraction Light
-  const crystalRim = new THREE.DirectionalLight(0xe879f9, 0.7);
+  // Neon Green Crystal Refraction Light
+  const crystalRim = new THREE.DirectionalLight(0x39ff14, 0.45);
   crystalRim.position.set(0, 15, -35);
   islandScene.add(crystalRim);
 
   // Point lights for vivid scientific brilliance
-  const academyLight = new THREE.PointLight(0x00f5ff, 2.8, 22);
+  const academyLight = new THREE.PointLight(0x00f5ff, 1.8, 22);
   academyLight.position.set(0, 6, 0);
   islandScene.add(academyLight);
 
-  const crystalPointLight = new THREE.PointLight(0xbd00ff, 3.5, 26);
+  const crystalPointLight = new THREE.PointLight(0x39ff14, 2.2, 26);
   crystalPointLight.position.set(0, 8.5, -17.5);
   islandScene.add(crystalPointLight);
 
@@ -370,10 +372,10 @@ function buildIslandTerrain() {
   desk.receiveShadow = true;
   islandGroup.add(desk);
 
-  // Top Grass Plateau (bright vivid emerald grass)
+  // Top Grass Plateau (rich vivid green grass surface)
   const grassMat = new THREE.MeshStandardMaterial({
-    color: 0x22c55e,
-    roughness: 0.7,
+    color: 0x16a34a,
+    roughness: 0.8,
     metalness: 0.05,
     flatShading: true
   });
@@ -383,8 +385,8 @@ function buildIslandTerrain() {
   grassPlateau.receiveShadow = true;
   islandGroup.add(grassPlateau);
 
-  // Inner elevated sunny bright lawn terrace
-  const innerLawnMat = new THREE.MeshStandardMaterial({ color: 0x4ade80, roughness: 0.65, flatShading: true });
+  // Inner elevated sunny green lawn terrace
+  const innerLawnMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.75, flatShading: true });
   const innerLawnGeom = new THREE.CylinderGeometry(15.5, 16.5, 0.6, 36);
   const innerLawn = new THREE.Mesh(innerLawnGeom, innerLawnMat);
   innerLawn.position.y = 2.7;
@@ -392,7 +394,7 @@ function buildIslandTerrain() {
   islandGroup.add(innerLawn);
 
   // Deep Emerald Border Fringe
-  const fringeMat = new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.8, flatShading: true });
+  const fringeMat = new THREE.MeshStandardMaterial({ color: 0x14532d, roughness: 0.85, flatShading: true });
   const fringeGeom = new THREE.TorusGeometry(23.8, 0.45, 8, 44);
   fringeGeom.rotateX(Math.PI / 2);
   const fringe = new THREE.Mesh(fringeGeom, fringeMat);
@@ -482,7 +484,7 @@ function buildScienceAcademy() {
   academyGroup.add(goldRing);
 
   // Ring of 8 Classical Doric/Ionic Columns
-  const columnMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.6, metalness: 0.15 });
+  const columnMat = new THREE.MeshStandardMaterial({ color: 0x39ff14, roughness: 0.6, metalness: 0.15 });
   const colGeom = new THREE.CylinderGeometry(0.24, 0.28, 3.2, 12);
   const columnRadius = 4.2;
   const numColumns = 8;
@@ -495,7 +497,7 @@ function buildScienceAcademy() {
   }
 
   // Circular Architrave Ring
-  const architraveMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.7, metalness: 0.2 });
+  const architraveMat = new THREE.MeshStandardMaterial({ color: 0x39ff14, roughness: 0.7, metalness: 0.2 });
   const architraveGeom = new THREE.CylinderGeometry(4.6, 4.4, 0.45, 36);
   const architrave = new THREE.Mesh(architraveGeom, architraveMat);
   architrave.position.y = 3.8;
@@ -532,7 +534,7 @@ function buildScienceAcademy() {
 
   // 3 Inclined Dynamic Electron Orbital Rings
   const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f5ff });
-  const electronMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const electronMat = new THREE.MeshBasicMaterial({ color: 0x39ff14 });
   const orbitalAngles = [
     { x: 0.8, y: 0.2, z: 0.3, speed: 0.024 },
     { x: -0.6, y: 0.7, z: -0.4, speed: -0.019 },
@@ -586,30 +588,31 @@ function buildScienceCrystalCitadel() {
   citadelGroup.add(tier2);
 
   // Neon Energy Rings on Floor
-  const energyRingMat1 = new THREE.MeshBasicMaterial({ color: 0x00f5ff });
+  const energyRingMat1 = new THREE.MeshBasicMaterial({ color: 0x39ff14 });
   const eRing1Geom = new THREE.TorusGeometry(3.6, 0.12, 8, 36);
   eRing1Geom.rotateX(Math.PI / 2);
   const eRing1 = new THREE.Mesh(eRing1Geom, energyRingMat1);
   eRing1.position.y = 1.15;
   citadelGroup.add(eRing1);
 
-  const energyRingMat2 = new THREE.MeshBasicMaterial({ color: 0xec4899 });
+  const energyRingMat2 = new THREE.MeshBasicMaterial({ color: 0x10b981 });
   const eRing2Geom = new THREE.TorusGeometry(2.6, 0.1, 8, 36);
   eRing2Geom.rotateX(Math.PI / 2);
   const eRing2 = new THREE.Mesh(eRing2Geom, energyRingMat2);
   eRing2.position.y = 1.16;
   citadelGroup.add(eRing2);
 
-  // Giant Levitating Faceted Science Crystal
+  // Giant Levitating Faceted Science Crystal (Vibrant Neon Green)
   const crystalMat = new THREE.MeshPhysicalMaterial({
-    color: 0xc084fc,
-    emissive: 0x7e22ce,
-    emissiveIntensity: 0.4,
-    roughness: 0.1,
-    metalness: 0.2,
-    transmission: 0.5,
+    color: 0x39ff14,
+    emissive: 0x00ff44,
+    emissiveIntensity: 0.8,
+    roughness: 0.12,
+    metalness: 0.1,
+    transmission: 0.0,
     clearcoat: 1.0,
-    reflectivity: 0.9
+    clearcoatRoughness: 0.1,
+    reflectivity: 0.95
   });
   const crystalGeom = new THREE.OctahedronGeometry(2.5, 0);
   crystalGeom.scale(1.3, 2.5, 1.3);
@@ -618,8 +621,8 @@ function buildScienceCrystalCitadel() {
   crystalMesh.castShadow = true;
   citadelGroup.add(crystalMesh);
 
-  // Orbiting Magical Halo Ring
-  const haloMat = new THREE.MeshBasicMaterial({ color: 0xfacc15, wireframe: true });
+  // Orbiting Magical Halo Ring (Neon Green)
+  const haloMat = new THREE.MeshBasicMaterial({ color: 0x39ff14, wireframe: true });
   const haloGeom = new THREE.TorusGeometry(3.2, 0.08, 6, 24);
   haloGeom.rotateX(Math.PI / 3);
   crystalHaloMesh = new THREE.Mesh(haloGeom, haloMat);
@@ -703,7 +706,7 @@ function buildStationPlatformsAndProps() {
         group.add(drop);
 
         // 3. Steam Cloud (Gas)
-        const cloudMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, transparent: true, opacity: 0.85 });
+        const cloudMat = new THREE.MeshStandardMaterial({ color: 0x39ff14, roughness: 0.9, transparent: true, opacity: 0.85 });
         const cloudGroup = new THREE.Group();
         cloudGroup.position.set(0, 2.4, 0.5);
         for (let i = 0; i < 4; i++) {
@@ -787,7 +790,7 @@ function buildStationPlatformsAndProps() {
         group.add(mtn);
 
         // Snow Cap
-        const snowMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8 });
+        const snowMat = new THREE.MeshStandardMaterial({ color: 0x39ff14, roughness: 0.8 });
         const snow = new THREE.Mesh(new THREE.ConeGeometry(0.65, 0.6, 7), snowMat);
         snow.position.set(-0.4, 2.4, -0.3);
         group.add(snow);
@@ -799,7 +802,7 @@ function buildStationPlatformsAndProps() {
         group.add(pond);
 
         // Raincloud
-        const cloudMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.9 });
+        const cloudMat = new THREE.MeshStandardMaterial({ color: 0x39ff14, roughness: 0.9 });
         const cloud = new THREE.Mesh(new THREE.DodecahedronGeometry(0.55, 1), cloudMat);
         cloud.position.set(0.6, 2.7, 0.2);
         group.add(cloud);
@@ -857,7 +860,7 @@ function buildStationPlatformsAndProps() {
       builder: (group) => {
         // 3D Ball-and-Stick Water Molecule (H2O)
         const oMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.2 }); // Oxygen
-        const hMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.2 }); // Hydrogen
+        const hMat = new THREE.MeshStandardMaterial({ color: 0x39ff14, roughness: 0.2 }); // Hydrogen
         const bondMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.6 });
 
         const oxygen = new THREE.Mesh(new THREE.SphereGeometry(0.42, 16, 16), oMat);
@@ -905,7 +908,7 @@ function buildStationPlatformsAndProps() {
         group.add(oLayer);
 
         // Mixture Bowl with Colorful Particles
-        const bowlMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.4 });
+        const bowlMat = new THREE.MeshStandardMaterial({ color: 0x39ff14, roughness: 0.4 });
         const bowl = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.4, 0.5, 16), bowlMat);
         bowl.position.set(0.8, 1.2, 0);
         group.add(bowl);
@@ -932,7 +935,7 @@ function buildStationPlatformsAndProps() {
     stationGroup.add(dais);
 
     // Metallic Rim Accent Ring
-    const rimMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0.8 });
+    const rimMat = new THREE.MeshStandardMaterial({ color: 0x39ff14, roughness: 0.2, metalness: 0.8 });
     const rimGeom = new THREE.TorusGeometry(2.45, 0.1, 8, 28);
     rimGeom.rotateX(Math.PI / 2);
     const rim = new THREE.Mesh(rimGeom, rimMat);
@@ -965,7 +968,7 @@ function buildStationPlatformsAndProps() {
 // 26 3D Stepping Stones Connecting the Path
 // ------------------------------------------------------------
 function buildSteppingStoneTrack() {
-  const normalStoneMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.7, metalness: 0.1 });
+  const normalStoneMat = new THREE.MeshStandardMaterial({ color: 0x39ff14, roughness: 0.7, metalness: 0.1 });
   const starStoneMat = new THREE.MeshStandardMaterial({ color: 0xfef08a, roughness: 0.4, metalness: 0.5, emissive: 0xeab308, emissiveIntensity: 0.3 });
   const powerStoneMat = new THREE.MeshStandardMaterial({ color: 0x93c5fd, roughness: 0.4, metalness: 0.5, emissive: 0x3b82f6, emissiveIntensity: 0.3 });
   const triviaStoneMat = new THREE.MeshStandardMaterial({ color: 0xfbcfe8, roughness: 0.4, metalness: 0.5, emissive: 0xec4899, emissiveIntensity: 0.3 });
@@ -1070,7 +1073,7 @@ function createPawnMesh(primaryColor, accentColor) {
   pawnGroup.add(body);
 
   // Waist accent ring
-  const waistMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.8, roughness: 0.2 });
+  const waistMat = new THREE.MeshStandardMaterial({ color: 0x39ff14, metalness: 0.8, roughness: 0.2 });
   const waistGeom = new THREE.TorusGeometry(0.38, 0.07, 8, 18);
   waistGeom.rotateX(Math.PI / 2);
   const waist = new THREE.Mesh(waistGeom, waistMat);
@@ -1085,7 +1088,7 @@ function createPawnMesh(primaryColor, accentColor) {
   pawnGroup.add(head);
 
   // Glowing crest visor
-  const visorMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const visorMat = new THREE.MeshBasicMaterial({ color: 0x39ff14 });
   const visorGeom = new THREE.SphereGeometry(0.18, 10, 10);
   const visor = new THREE.Mesh(visorGeom, visorMat);
   visor.position.set(0, 2.05, 0.36);
@@ -1762,7 +1765,7 @@ function resetCrystalGameState() {
     lastErrorItemId: null,
     scores: { 1: 0, 2: 0 },
     feedback: {
-      text: 'Take turns dragging or clicking an item below to classify it into Solid, Liquid, or Gas. If you guess incorrectly, your turn passes!',
+      text: 'Drag or click an item below into its correct state. Wrong drops pass your turn!',
       type: 'info'
     },
     sorted: {
@@ -1772,29 +1775,32 @@ function resetCrystalGameState() {
     },
     pool: [
       {
-        id: 'ice',
+        id: 'ice_cubes',
         name: 'Ice Cubes',
         icon: '🧊',
+        img: 'assets/pic_ice_cubes.jpg',
         category: 'solid',
-        tag: 'Everyday Matter',
+        tag: 'SOLID',
         desc: 'Rigid shape, tightly packed hexagonal lattice bonds',
         hint: 'Maintains fixed shape below 0°C'
       },
       {
-        id: 'water',
+        id: 'glass_water',
         name: 'Glass of Water',
         icon: '🥛',
+        img: 'assets/pic_glass_water.jpg',
         category: 'liquid',
-        tag: 'Everyday Matter',
+        tag: 'LIQUID',
         desc: 'Fills bottom of tumbler, takes container shape, flows freely',
         hint: 'Fixed volume with fluid sliding molecules'
       },
       {
-        id: 'steam',
+        id: 'steam_vapor',
         name: 'Steam / Vapor Cloud',
         icon: '☁️',
+        img: 'assets/pic_steam_vapor.jpg',
         category: 'gas',
-        tag: 'Everyday Matter',
+        tag: 'GAS',
         desc: 'Water vapor expanding into the atmosphere above 100°C',
         hint: 'High-speed molecules spread out to fill any volume'
       },
@@ -1802,35 +1808,39 @@ function resetCrystalGameState() {
         id: 'diamond',
         name: 'Diamond Crystal',
         icon: '💎',
+        img: 'assets/pic_diamond.jpg',
         category: 'solid',
-        tag: 'Crystalline Solid',
+        tag: 'SOLID',
         desc: 'Rigid tetrahedral carbon lattice that strongly resists compression',
         hint: 'Incompressible solid with fixed atomic positions'
       },
       {
-        id: 'oil',
+        id: 'olive_oil',
         name: 'Olive Oil',
         icon: '🫒',
+        img: 'assets/pic_olive_oil.jpg',
         category: 'liquid',
-        tag: 'Fluid Liquid',
+        tag: 'LIQUID',
         desc: 'Viscous fluid with level top surface sliding past each other',
         hint: 'Takes shape of container, flows smoothly'
       },
       {
-        id: 'balloon',
+        id: 'helium_balloon',
         name: 'Helium in Balloon',
         icon: '🎈',
+        img: 'assets/pic_helium_balloon.jpg',
         category: 'gas',
-        tag: 'Compressible Gas',
+        tag: 'GAS',
         desc: 'Atoms bouncing against balloon walls at high velocity',
         hint: 'Expands in all directions to fill the entire container'
       },
       {
-        id: 'iron',
+        id: 'iron_nail',
         name: 'Iron Nail',
         icon: '🪙',
+        img: 'assets/pic_iron_nail.jpg',
         category: 'solid',
-        tag: 'Metallic Solid',
+        tag: 'SOLID',
         desc: 'Dense metallic lattice that maintains definite volume and shape',
         hint: 'Atoms locked in place vibrating at fixed points'
       },
@@ -1838,46 +1848,71 @@ function resetCrystalGameState() {
         id: 'honey',
         name: 'Pouring Honey',
         icon: '🍯',
+        img: 'assets/pic_honey.jpg',
         category: 'liquid',
-        tag: 'Viscous Fluid',
+        tag: 'LIQUID',
         desc: 'Thick fluid substance that adapts to vessel shape when poured',
         hint: 'Liquid state: flows and adapts without fixed shape'
       },
       {
-        id: 'oxygen',
-        name: 'Oxygen in Steel Tank',
-        icon: '🌫️',
-        category: 'gas',
-        tag: 'Compressed Gas',
-        desc: 'Readily compressed into smaller volume, huge intermolecular gaps',
-        hint: 'Can be compressed easily because particles are far apart'
-      },
-      {
-        id: 'p_lattice',
-        name: 'Regular Hexagonal Lattice',
-        icon: '🔬',
+        id: 'crystalline_solid',
+        name: 'Crystalline Solid',
+        icon: '❄️',
+        img: 'assets/pic_crystalline_solid.jpg',
         category: 'solid',
-        tag: 'Particle Representation',
+        tag: 'SOLID',
         desc: 'Atoms bound in a regular repeating grid, vibrating in place',
         hint: 'Microscopic atomic model of a solid crystalline lattice'
       },
       {
-        id: 'p_liquid',
-        name: 'Sliding Molecular Cluster',
-        icon: '🔬',
+        id: 'water_droplet',
+        name: 'Water Droplet',
+        icon: '💧',
+        img: 'assets/pic_water_droplet.jpg',
         category: 'liquid',
-        tag: 'Particle Representation',
+        tag: 'LIQUID',
         desc: 'Molecules closely packed together but constantly sliding past one another',
-        hint: 'Microscopic atomic model of a liquid in motion'
+        hint: 'Fixed volume with fluid sliding molecules'
       },
       {
-        id: 'p_gas',
-        name: 'Distant High-Speed Particles',
-        icon: '🔬',
+        id: 'carbon_dioxide',
+        name: 'Carbon Dioxide',
+        icon: '🌫️',
+        img: 'assets/pic_carbon_dioxide.jpg',
         category: 'gas',
-        tag: 'Particle Representation',
+        tag: 'GAS',
         desc: 'Particles spaced far apart, traveling in straight paths at 500 m/s',
-        hint: 'Microscopic kinetic model of a gas filling open space'
+        hint: 'Gas state: easily compressed, fills container volume'
+      },
+      {
+        id: 'milk',
+        name: 'Milk',
+        icon: '🥛',
+        img: 'assets/pic_milk.jpg',
+        category: 'liquid',
+        tag: 'LIQUID',
+        desc: 'Liquid emulsion taking the shape of its glass',
+        hint: 'Fixed volume without fixed shape'
+      },
+      {
+        id: 'steam_kettle',
+        name: 'Steam from Kettle',
+        icon: '🫖',
+        img: 'assets/pic_steam_kettle.jpg',
+        category: 'gas',
+        tag: 'GAS',
+        desc: 'Boiling vapor shooting from kettle spout at high kinetic energy',
+        hint: 'Gas molecules expanding rapidly into surrounding air'
+      },
+      {
+        id: 'sand',
+        name: 'Sand',
+        icon: '🏖️',
+        img: 'assets/pic_sand.jpg',
+        category: 'solid',
+        tag: 'SOLID',
+        desc: 'Granular solid: each individual sand grain maintains rigid fixed shape and volume',
+        hint: 'Even though sand pours, each grain is an incompressible solid'
       }
     ]
   };
@@ -1900,295 +1935,343 @@ window.renderCrystalSortingModal = function() {
   const activeP = gameState.players[s.activePlayer];
   const isP1Turn = s.activePlayer === 1;
 
+  // Helper to render sorted items as small chips
+  const renderSortedChips = (items) => {
+    if (items.length === 0) return '';
+    return items.map(item => `
+      <div style="
+        display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;
+        font-size:9px;font-weight:800;
+        background:${item.placedBy === 1 ? 'rgba(2,132,199,0.3)' : 'rgba(225,29,72,0.3)'};
+        color:${item.placedBy === 1 ? '#38bdf8' : '#fb7185'};
+        border:1px solid ${item.placedBy === 1 ? '#0284c7' : '#e11d48'};
+      ">
+        <span>${item.icon}</span>
+        <span style="white-space:nowrap;">${item.name}</span>
+        <span style="opacity:0.75;font-size:8px;">+50XP</span>
+      </div>
+    `).join('');
+  };
+
   modal.innerHTML = `
-    <div class="quest-glass rounded-3xl max-w-6xl w-full p-4 sm:p-6 border-2 border-amber-400/80 shadow-2xl relative space-y-4 max-h-[92vh] overflow-y-auto bg-white/95 text-slate-800">
-      
-      <!-- Top Title & Controls Header -->
-      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
-        <div class="flex items-center space-x-3">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-purple-600 to-cyan-500 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-purple-500/20 animate-pulse">
-            💎
-          </div>
-          <div>
-            <div class="flex items-center space-x-2">
-              <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300">FINAL BOSS CHALLENGE</span>
-              <span class="text-xs text-slate-500 font-mono">Turn-by-Turn Classification</span>
-            </div>
-            <h2 class="text-lg sm:text-xl font-black text-amber-700 glow-gold font-mono">
-              THE SCIENCE CRYSTAL: STATES OF MATTER TRIAL
-            </h2>
-          </div>
-        </div>
+    <div class="crystal-trial-modal" style="
+      max-width: 1040px; width: 96vw; max-height: 94vh; overflow-y: auto;
+      border-radius: 24px; border: 2.5px solid rgba(139, 92, 246, 0.7);
+      background: radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.15), transparent 40%),
+                  radial-gradient(circle at 15% 15%, rgba(168, 85, 247, 0.2), transparent 40%),
+                  linear-gradient(180deg, #0d1b38 0%, #071022 100%);
+      box-shadow: 0 0 60px rgba(139, 92, 246, 0.35), 0 25px 70px rgba(0, 0, 0, 0.85);
+      position: relative; overflow: hidden;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #ffffff;
+    ">
+      <!-- Ambient Background Layer -->
+      <div style="position:absolute;inset:0;opacity:0.2;background:url('assets/crystal_trial_bg.jpg') center/cover no-repeat;pointer-events:none;z-index:0;"></div>
 
-        <!-- Scoreboard & Close Button -->
-        <div class="flex items-center space-x-3">
-          <div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-blue-50 border border-blue-200 text-xs font-mono shadow-xs">
-            <span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span>
-            <span class="text-blue-700 font-bold">Blue: ${s.scores[1]} XP</span>
-          </div>
-          <div class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-xs font-mono shadow-xs">
-            <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-            <span class="text-rose-700 font-bold">Red: ${s.scores[2]} XP</span>
-          </div>
-          <button onclick="closeDuelModal()" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 hover:text-slate-800 hover:bg-slate-200 border border-slate-200 flex items-center justify-center transition">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-      </div>
+      <!-- Content Layer -->
+      <div style="position:relative;z-index:1;padding:14px 18px 18px;">
 
-      <!-- Turn Banner -->
-      <div class="p-3 rounded-2xl border flex flex-wrap items-center justify-between gap-2 shadow-sm ${isP1Turn ? 'bg-sky-50 border-cyan-400 text-blue-900 pulse-turn-blue' : 'bg-rose-50 border-rose-400 text-rose-900 pulse-turn-red'}">
-        <div class="flex items-center space-x-2">
-          <span class="text-lg">${isP1Turn ? '🔵' : '🔴'}</span>
-          <div>
-            <span class="text-xs font-mono font-black uppercase tracking-wider ${isP1Turn ? 'text-blue-700' : 'text-rose-700'}">
-              ${activeP.name}'s Turn:
-            </span>
-            <span class="text-xs text-slate-700 font-medium ml-1">
-              Drag or click an item below into its correct state. <strong class="text-amber-700">Wrong drops pass your turn!</strong>
-            </span>
-          </div>
-        </div>
-        <div class="text-[11px] font-mono text-slate-500">
-          Remaining in Pool: <strong class="text-slate-900 font-bold">${s.pool.length}</strong> items
-        </div>
-      </div>
-
-      <!-- Educational Toast Feedback Bar -->
-      <div class="px-4 py-2 rounded-xl text-xs font-mono flex items-center space-x-2 shadow-xs ${s.feedback.type === 'error' ? 'bg-rose-50 border border-rose-300 text-rose-800' : s.feedback.type === 'success' ? 'bg-emerald-50 border border-emerald-300 text-emerald-800' : 'bg-sky-50 border border-sky-200 text-blue-800'}">
-        <i class="fa-solid ${s.feedback.type === 'error' ? 'fa-triangle-exclamation text-rose-500' : s.feedback.type === 'success' ? 'fa-circle-check text-emerald-500' : 'fa-circle-info text-blue-500'}"></i>
-        <span class="font-medium">${s.feedback.text}</span>
-      </div>
-
-      <!-- Temperature Scale Header -->
-      <div class="w-full rounded-xl overflow-hidden bg-white border border-slate-200 p-2.5 space-y-1 shadow-sm">
-        <div class="flex justify-between text-[10px] font-mono font-bold text-slate-600 px-1">
-          <span class="text-cyan-700 font-black">0 °C (Freezing / Solid Point)</span>
-          <span class="text-amber-700 font-black">Phase Transformations</span>
-          <span class="text-rose-700 font-black">100 °C (Boiling / Gas Point)</span>
-        </div>
-        <div class="w-full h-3 rounded-full bg-gradient-to-r from-blue-500 via-emerald-400 via-yellow-400 to-rose-600 shadow-inner"></div>
-      </div>
-
-      <!-- THE THREE DROP CATEGORIES (SOLID, LIQUID, GAS) -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-        
-        <!-- 1. SOLID DROP ZONE -->
-        <div id="zone-solid" ondragover="onCrystalZoneDragOver(event)" ondragleave="onCrystalZoneDragLeave(event)" ondrop="onCrystalZoneDrop(event, 'solid')" onclick="clickCategoryZone('solid')" class="drop-target-zone rounded-2xl border-2 border-cyan-400 bg-sky-50/70 hover:bg-sky-100/90 p-3.5 flex flex-col justify-between cursor-pointer space-y-2.5 shadow-sm">
-          <div>
-            <!-- Category Header -->
-            <div class="flex items-center justify-between border-b border-cyan-200 pb-2">
-              <div class="flex items-center space-x-2">
-                <span class="text-2xl">🧊</span>
-                <div>
-                  <h3 class="text-sm font-black font-mono text-cyan-800">SOLID</h3>
-                  <span class="text-[10px] text-cyan-600 font-mono font-medium">0°C & Below</span>
-                </div>
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- TOP HEADER: Title + Scores + Close                        -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
+          
+          <!-- Left: Cosmic Orb + Title -->
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="
+              width: 50px; height: 50px; border-radius: 50%;
+              background: url('assets/ref_planet_orb.png') center/cover no-repeat;
+              box-shadow: 0 0 20px rgba(217, 70, 239, 0.7), 0 0 8px rgba(56, 189, 248, 0.8);
+              border: 2px solid rgba(255, 255, 255, 0.4);
+              flex-shrink: 0;
+            "></div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
+                <span style="
+                  font-size: 10px; font-weight: 900; padding: 2px 8px; border-radius: 6px;
+                  background: linear-gradient(135deg, #f59e0b, #ef4444); color: white;
+                  letter-spacing: 0.5px; text-transform: uppercase;
+                ">👑 FINAL BOSS CHALLENGE</span>
+                <span style="font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 600;">Turn-by-Turn Classification</span>
               </div>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-100 text-cyan-800 border border-cyan-300 font-bold">
-                ${s.sorted.solid.length} items
-              </span>
-            </div>
-
-            <!-- Microscopic & Container Properties -->
-            <div class="my-2 p-2.5 rounded-xl bg-white border border-cyan-200 text-[10px] text-slate-700 space-y-1 shadow-xs">
-              <div class="font-bold text-cyan-800 flex items-center space-x-1">
-                <i class="fa-solid fa-atom text-[9px] text-cyan-600"></i>
-                <span>Microscopic Representation:</span>
-              </div>
-              <p class="leading-tight text-slate-600">Tightly packed regular lattice vibrating only in fixed spots. Definite shape & fixed volume.</p>
+              <h2 style="
+                font-size: clamp(16px, 2.2vw, 20px); font-weight: 900; line-height: 1.15;
+                letter-spacing: 1px; text-transform: uppercase;
+                font-family: 'Fira Code', 'Inter', monospace;
+                color: #ffffff;
+                text-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+                margin: 0;
+              ">
+                <span style="color: #ffffff;">THE SCIENCE CRYSTAL:</span>
+                <span style="background: linear-gradient(90deg, #38bdf8, #60a5fa, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> STATES OF MATTER TRIAL</span>
+              </h2>
             </div>
           </div>
 
-          <!-- Dropped Items Container -->
-          <div class="flex-grow space-y-1.5 min-h-[90px] border border-dashed border-cyan-300 rounded-xl p-2 bg-white/70">
-            ${s.sorted.solid.length === 0 ? `
-              <div class="h-full flex flex-col items-center justify-center text-slate-400 text-[11px] font-mono text-center py-4">
-                <i class="fa-solid fa-cloud-arrow-down text-lg mb-1 text-cyan-500 opacity-60"></i>
-                <span>Drop Solid items here</span>
+          <!-- Right: Scores + Close -->
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="
+              display:flex; align-items:center; gap:8px; padding: 6px 14px; border-radius: 20px;
+              background: linear-gradient(135deg, rgba(2, 132, 199, 0.35), rgba(3, 105, 161, 0.2));
+              border: 1.5px solid ${isP1Turn ? '#38bdf8' : 'rgba(56, 189, 248, 0.4)'};
+              box-shadow: ${isP1Turn ? '0 0 16px rgba(56, 189, 248, 0.5)' : 'none'};
+            ">
+              <div style="width:24px;height:24px;border-radius:50%;background:#0284c7;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;">
+                <i class="fa-solid fa-gem"></i>
               </div>
-            ` : s.sorted.solid.map(item => `
-              <div class="p-2 rounded-lg bg-white border border-cyan-200 text-xs flex items-center justify-between shadow-xs">
-                <div class="flex items-center space-x-2">
-                  <span class="text-base">${item.icon}</span>
-                  <div>
-                    <div class="font-bold text-slate-900 text-[11px]">${item.name}</div>
-                    <div class="text-[9px] text-slate-500">${item.tag}</div>
-                  </div>
-                </div>
-                <span class="text-[9px] font-mono px-1.5 py-0.5 rounded ${item.placedBy === 1 ? 'bg-blue-100 text-blue-700' : 'bg-rose-100 text-rose-700'} font-bold">
-                  ${item.placedBy === 1 ? 'Blue' : 'Red'} +50XP
-                </span>
+              <div style="text-align:left;">
+                <div style="font-size:9px;color:rgba(255,255,255,0.6);font-weight:700;">Blue Team</div>
+                <div style="font-size:13px;font-weight:900;color:#38bdf8;font-family:'Fira Code',monospace;">${s.scores[1]} XP</div>
               </div>
-            `).join('')}
-          </div>
-
-          <div class="text-[9px] font-mono text-cyan-700 font-semibold text-center">
-            Click here or drop item
-          </div>
-        </div>
-
-        <!-- 2. LIQUID DROP ZONE -->
-        <div id="zone-liquid" ondragover="onCrystalZoneDragOver(event)" ondragleave="onCrystalZoneDragLeave(event)" ondrop="onCrystalZoneDrop(event, 'liquid')" onclick="clickCategoryZone('liquid')" class="drop-target-zone rounded-2xl border-2 border-blue-400 bg-blue-50/70 hover:bg-blue-100/90 p-3.5 flex flex-col justify-between cursor-pointer space-y-2.5 shadow-sm">
-          <div>
-            <!-- Category Header -->
-            <div class="flex items-center justify-between border-b border-blue-200 pb-2">
-              <div class="flex items-center space-x-2">
-                <span class="text-2xl">💧</span>
-                <div>
-                  <h3 class="text-sm font-black font-mono text-blue-800">LIQUID</h3>
-                  <span class="text-[10px] text-blue-600 font-mono font-medium">Fluid Flow State</span>
-                </div>
-              </div>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-300 font-bold">
-                ${s.sorted.liquid.length} items
-              </span>
             </div>
 
-            <!-- Microscopic & Container Properties -->
-            <div class="my-2 p-2.5 rounded-xl bg-white border border-blue-200 text-[10px] text-slate-700 space-y-1 shadow-xs">
-              <div class="font-bold text-blue-800 flex items-center space-x-1">
-                <i class="fa-solid fa-water text-[9px] text-blue-600"></i>
-                <span>Microscopic Representation:</span>
+            <div style="
+              display:flex; align-items:center; gap:8px; padding: 6px 14px; border-radius: 20px;
+              background: linear-gradient(135deg, rgba(225, 29, 72, 0.35), rgba(190, 18, 60, 0.2));
+              border: 1.5px solid ${!isP1Turn ? '#fb7185' : 'rgba(251, 113, 133, 0.4)'};
+              box-shadow: ${!isP1Turn ? '0 0 16px rgba(251, 113, 133, 0.5)' : 'none'};
+            ">
+              <div style="width:24px;height:24px;border-radius:50%;background:#e11d48;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;">
+                <i class="fa-solid fa-fire"></i>
               </div>
-              <p class="leading-tight text-slate-600">Closely packed molecules sliding past each other. Fills container bottom, fixed volume.</p>
-            </div>
-          </div>
-
-          <!-- Dropped Items Container -->
-          <div class="flex-grow space-y-1.5 min-h-[90px] border border-dashed border-blue-300 rounded-xl p-2 bg-white/70">
-            ${s.sorted.liquid.length === 0 ? `
-              <div class="h-full flex flex-col items-center justify-center text-slate-400 text-[11px] font-mono text-center py-4">
-                <i class="fa-solid fa-cloud-arrow-down text-lg mb-1 text-blue-500 opacity-60"></i>
-                <span>Drop Liquid items here</span>
+              <div style="text-align:left;">
+                <div style="font-size:9px;color:rgba(255,255,255,0.6);font-weight:700;">Red Team</div>
+                <div style="font-size:13px;font-weight:900;color:#fb7185;font-family:'Fira Code',monospace;">${s.scores[2]} XP</div>
               </div>
-            ` : s.sorted.liquid.map(item => `
-              <div class="p-2 rounded-lg bg-white border border-blue-200 text-xs flex items-center justify-between shadow-xs">
-                <div class="flex items-center space-x-2">
-                  <span class="text-base">${item.icon}</span>
-                  <div>
-                    <div class="font-bold text-slate-900 text-[11px]">${item.name}</div>
-                    <div class="text-[9px] text-slate-500">${item.tag}</div>
-                  </div>
-                </div>
-                <span class="text-[9px] font-mono px-1.5 py-0.5 rounded ${item.placedBy === 1 ? 'bg-blue-100 text-blue-700' : 'bg-rose-100 text-rose-700'} font-bold">
-                  ${item.placedBy === 1 ? 'Blue' : 'Red'} +50XP
-                </span>
-              </div>
-            `).join('')}
-          </div>
-
-          <div class="text-[9px] font-mono text-blue-700 font-semibold text-center">
-            Click here or drop item
-          </div>
-        </div>
-
-        <!-- 3. GAS DROP ZONE -->
-        <div id="zone-gas" ondragover="onCrystalZoneDragOver(event)" ondragleave="onCrystalZoneDragLeave(event)" ondrop="onCrystalZoneDrop(event, 'gas')" onclick="clickCategoryZone('gas')" class="drop-target-zone rounded-2xl border-2 border-purple-400 bg-purple-50/70 hover:bg-purple-100/90 p-3.5 flex flex-col justify-between cursor-pointer space-y-2.5 shadow-sm">
-          <div>
-            <!-- Category Header -->
-            <div class="flex items-center justify-between border-b border-purple-200 pb-2">
-              <div class="flex items-center space-x-2">
-                <span class="text-2xl">💨</span>
-                <div>
-                  <h3 class="text-sm font-black font-mono text-purple-800">GAS</h3>
-                  <span class="text-[10px] text-purple-600 font-mono font-medium">100°C & Above</span>
-                </div>
-              </div>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-100 text-purple-800 border border-purple-300 font-bold">
-                ${s.sorted.gas.length} items
-              </span>
             </div>
 
-            <!-- Microscopic & Container Properties -->
-            <div class="my-2 p-2.5 rounded-xl bg-white border border-purple-200 text-[10px] text-slate-700 space-y-1 shadow-xs">
-              <div class="font-bold text-purple-800 flex items-center space-x-1">
-                <i class="fa-solid fa-wind text-[9px] text-purple-600"></i>
-                <span>Microscopic Representation:</span>
-              </div>
-              <p class="leading-tight text-slate-600">Molecules far apart zipping at high speeds in all directions. Expands to fill any space.</p>
-            </div>
-          </div>
-
-          <!-- Dropped Items Container -->
-          <div class="flex-grow space-y-1.5 min-h-[90px] border border-dashed border-purple-300 rounded-xl p-2 bg-white/70">
-            ${s.sorted.gas.length === 0 ? `
-              <div class="h-full flex flex-col items-center justify-center text-slate-400 text-[11px] font-mono text-center py-4">
-                <i class="fa-solid fa-cloud-arrow-down text-lg mb-1 text-purple-500 opacity-60"></i>
-                <span>Drop Gas items here</span>
-              </div>
-            ` : s.sorted.gas.map(item => `
-              <div class="p-2 rounded-lg bg-white border border-purple-200 text-xs flex items-center justify-between shadow-xs">
-                <div class="flex items-center space-x-2">
-                  <span class="text-base">${item.icon}</span>
-                  <div>
-                    <div class="font-bold text-slate-900 text-[11px]">${item.name}</div>
-                    <div class="text-[9px] text-slate-500">${item.tag}</div>
-                  </div>
-                </div>
-                <span class="text-[9px] font-mono px-1.5 py-0.5 rounded ${item.placedBy === 1 ? 'bg-blue-100 text-blue-700' : 'bg-rose-100 text-rose-700'} font-bold">
-                  ${item.placedBy === 1 ? 'Blue' : 'Red'} +50XP
-                </span>
-              </div>
-            `).join('')}
-          </div>
-
-          <div class="text-[9px] font-mono text-purple-700 font-semibold text-center">
-            Click here or drop item
-          </div>
-        </div>
-
-      </div>
-
-      <!-- BOTTOM OBJECTS & PARTICLES POOL -->
-      <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5 shadow-inner">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2 text-xs font-mono font-bold text-slate-800">
-            <i class="fa-solid fa-layer-group text-amber-500"></i>
-            <span>ITEMS TO CLASSIFY (Drag into a category above or Click to select):</span>
-          </div>
-          <span class="text-[10px] font-mono text-slate-500 font-medium">
-            ${s.selectedItemId ? '⭐ Card Selected — Now click a category zone above!' : 'Click or Drag any card'}
-          </span>
-        </div>
-
-        ${s.pool.length === 0 ? `
-          <div class="p-6 rounded-xl bg-emerald-50 border-2 border-emerald-300 text-center space-y-3 shadow-md">
-            <div class="text-3xl">🎉👑💎</div>
-            <h3 class="text-lg font-black text-emerald-800 font-mono">ALL OBJECTS & PARTICLES CORRECTLY CLASSIFIED!</h3>
-            <p class="text-xs text-slate-600">Both teams demonstrated master-level understanding of solids, liquids, and gases!</p>
-            <button onclick="finishCrystalTrial()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-black text-sm shadow-xl hover:brightness-110">
-              Claim Science Crystal & Final Victory!
+            <button onclick="closeDuelModal()" style="
+              width:34px;height:34px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.2);
+              background:rgba(255,255,255,0.08);color:white;cursor:pointer;
+              display:flex;align-items:center;justify-content:center;font-size:14px;
+              transition:all 0.2s;
+            " onmouseover="this.style.background='rgba(239,68,68,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+              <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
-        ` : `
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 max-h-[220px] overflow-y-auto p-1 scrollbar-none">
-            ${s.pool.map(item => {
-              const isSelected = (s.selectedItemId === item.id);
-              const isError = (s.lastErrorItemId === item.id);
-              return `
-                <div draggable="true" ondragstart="onCrystalItemDragStart(event, '${item.id}')" onclick="selectCrystalItem('${item.id}')" class="draggable-item-card p-2.5 rounded-xl bg-white border ${isSelected ? 'selected-card bg-amber-50 border-amber-400 shadow-md' : 'border-slate-200 hover:border-blue-400 shadow-xs'} ${isError ? 'shake-error border-rose-500 bg-rose-50' : ''} flex flex-col justify-between space-y-1.5 transition-all">
-                  <div class="flex items-center justify-between">
-                    <span class="text-xl">${item.icon}</span>
-                    <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 font-medium">
-                      ${item.tag}
-                    </span>
-                  </div>
-                  <div>
-                    <h4 class="text-xs font-bold text-slate-900 leading-tight">${item.name}</h4>
-                    <p class="text-[9px] text-slate-500 leading-tight mt-0.5">${item.desc}</p>
-                  </div>
-                  <div class="pt-1 border-t border-slate-100 flex items-center justify-between text-[9px] font-mono text-slate-400">
-                    <span class="font-bold text-slate-600">${isSelected ? '⭐ SELECTED' : '⠿ DRAG ME'}</span>
-                    <span class="text-amber-600 font-bold">+50 XP</span>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        `}
-      </div>
+        </div>
 
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- TURN BANNER                                                -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div style="
+          padding: 8px 16px; border-radius: 20px; margin-bottom: 8px;
+          display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+          background: ${isP1Turn ? 'linear-gradient(90deg, rgba(2, 132, 199, 0.25), rgba(14, 165, 233, 0.15))' : 'linear-gradient(90deg, rgba(225, 29, 72, 0.25), rgba(244, 63, 94, 0.15))'};
+          border: 2px solid ${isP1Turn ? '#0284c7' : '#e11d48'};
+          box-shadow: 0 0 16px ${isP1Turn ? 'rgba(2, 132, 199, 0.25)' : 'rgba(225, 29, 72, 0.25)'};
+        ">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="
+              width: 22px; height: 22px; border-radius: 50%;
+              background: ${isP1Turn ? '#0284c7' : '#e11d48'};
+              color: white; display: flex; align-items: center; justify-content: center;
+              font-size: 12px; font-weight: 900;
+            ">!</div>
+            <div style="font-size: 11px;">
+              <span style="font-weight: 900; text-transform: uppercase; color: ${isP1Turn ? '#38bdf8' : '#fb7185'}; letter-spacing: 0.5px;">
+                ${activeP.name.toUpperCase()}'S TURN:
+              </span>
+              <span style="color: rgba(255,255,255,0.85); margin-left: 6px;">
+                Drag or click an item below into its correct state. <strong style="color: #ffd700;">Wrong drops pass your turn!</strong>
+              </span>
+            </div>
+          </div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.6); font-family: 'Fira Code', monospace;">
+            Remaining in Pool: <strong style="color: white; font-size: 12px;">${s.pool.length}</strong> items
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- FEEDBACK / ALERT BANNER                                    -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div style="
+          padding: 7px 14px; border-radius: 12px; margin-bottom: 8px;
+          display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600;
+          ${s.feedback.type === 'error'
+            ? 'background: rgba(254, 226, 226, 0.95); border: 1.5px solid #ef4444; color: #b91c1c;'
+            : s.feedback.type === 'success'
+            ? 'background: rgba(220, 252, 231, 0.95); border: 1.5px solid #22c55e; color: #15803d;'
+            : 'background: rgba(224, 242, 254, 0.95); border: 1.5px solid #38bdf8; color: #0369a1;'}
+        ">
+          <span style="font-weight: 900; font-size: 12px;">
+            ${s.feedback.type === 'error' ? '✕ |' : s.feedback.type === 'success' ? '✓ |' : 'ℹ |'}
+          </span>
+          <span>${s.feedback.text}</span>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- PHASE TRANSFORMATION TEMPERATURE BAR                       -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div style="
+          padding: 6px 14px; border-radius: 12px; margin-bottom: 10px;
+          background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
+        ">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:10px;font-weight:800;color:#38bdf8;font-family:'Fira Code',monospace;">❄️ 0°C (Freezing / Solid Point)</span>
+            <span style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.7);font-family:'Fira Code',monospace;">Phase Transformations</span>
+            <span style="font-size:10px;font-weight:800;color:#fb7185;font-family:'Fira Code',monospace;">🔥 100°C (Boiling / Gas Point)</span>
+          </div>
+          <div style="
+            height: 7px; border-radius: 7px;
+            background: linear-gradient(90deg, #0284c7 0%, #06b6d4 25%, #10b981 50%, #f59e0b 75%, #ef4444 100%);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+            position: relative;
+          "></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- THREE STATE CONTAINERS (SOLID / LIQUID / GAS)              -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:12px;margin-bottom:12px;">
+          
+          <!-- SOLID ZONE -->
+          <div id="zone-solid"
+               ondragover="onCrystalZoneDragOver(event)"
+               ondragleave="onCrystalZoneDragLeave(event)"
+               ondrop="onCrystalZoneDrop(event, 'solid')"
+               onclick="clickCategoryZone('solid')"
+               class="drop-target-zone"
+               style="
+                 border-radius: 16px; border: 2px solid rgba(56, 189, 248, 0.5);
+                 background: #061226; cursor: pointer; overflow: hidden;
+                 transition: all 0.25s; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+               ">
+            <div style="position:relative; height: 185px; overflow:hidden;">
+              <img src="assets/chamber_solid_exact.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Solid Chamber">
+            </div>
+            <!-- Sorted Items List in Chamber -->
+            <div style="padding: 6px 8px; min-height: 36px; background: rgba(3, 15, 35, 0.85); display: flex; flex-wrap: wrap; gap: 4px; border-top: 1px solid rgba(56, 189, 248, 0.2);">
+              ${renderSortedChips(s.sorted.solid)}
+              ${s.sorted.solid.length === 0 ? '<div style="width:100%;text-align:center;font-size:10px;color:rgba(255,255,255,0.4);padding:4px;">Drop SOLID items here</div>' : ''}
+            </div>
+          </div>
+
+          <!-- LIQUID ZONE -->
+          <div id="zone-liquid"
+               ondragover="onCrystalZoneDragOver(event)"
+               ondragleave="onCrystalZoneDragLeave(event)"
+               ondrop="onCrystalZoneDrop(event, 'liquid')"
+               onclick="clickCategoryZone('liquid')"
+               class="drop-target-zone"
+               style="
+                 border-radius: 16px; border: 2px solid rgba(6, 182, 212, 0.5);
+                 background: #061226; cursor: pointer; overflow: hidden;
+                 transition: all 0.25s; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+               ">
+            <div style="position:relative; height: 185px; overflow:hidden;">
+              <img src="assets/chamber_liquid_exact.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Liquid Chamber">
+            </div>
+            <div style="padding: 6px 8px; min-height: 36px; background: rgba(3, 15, 35, 0.85); display: flex; flex-wrap: wrap; gap: 4px; border-top: 1px solid rgba(6, 182, 212, 0.2);">
+              ${renderSortedChips(s.sorted.liquid)}
+              ${s.sorted.liquid.length === 0 ? '<div style="width:100%;text-align:center;font-size:10px;color:rgba(255,255,255,0.4);padding:4px;">Drop LIQUID items here</div>' : ''}
+            </div>
+          </div>
+
+          <!-- GAS ZONE -->
+          <div id="zone-gas"
+               ondragover="onCrystalZoneDragOver(event)"
+               ondragleave="onCrystalZoneDragLeave(event)"
+               ondrop="onCrystalZoneDrop(event, 'gas')"
+               onclick="clickCategoryZone('gas')"
+               class="drop-target-zone"
+               style="
+                 border-radius: 16px; border: 2px solid rgba(236, 72, 153, 0.5);
+                 background: #061226; cursor: pointer; overflow: hidden;
+                 transition: all 0.25s; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+               ">
+            <div style="position:relative; height: 185px; overflow:hidden;">
+              <img src="assets/chamber_gas_exact.jpg" style="width:100%;height:100%;object-fit:cover;" alt="Gas Chamber">
+            </div>
+            <div style="padding: 6px 8px; min-height: 36px; background: rgba(3, 15, 35, 0.85); display: flex; flex-wrap: wrap; gap: 4px; border-top: 1px solid rgba(236, 72, 153, 0.2);">
+              ${renderSortedChips(s.sorted.gas)}
+              ${s.sorted.gas.length === 0 ? '<div style="width:100%;text-align:center;font-size:10px;color:rgba(255,255,255,0.4);padding:4px;">Drop GAS items here</div>' : ''}
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- BOTTOM ITEM POOL (14 CARDS: 7 COLUMNS X 2 ROWS)            -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div style="
+          padding: 10px 14px; border-radius: 16px;
+          background: linear-gradient(180deg, rgba(8, 22, 48, 0.95), rgba(4, 12, 28, 0.98));
+          border: 1.5px solid rgba(56, 189, 248, 0.35);
+          box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+        ">
+          <!-- Tray Header -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <i class="fa-solid fa-cube" style="color:#38bdf8;font-size:13px;"></i>
+              <span style="font-size:11px;font-weight:900;color:white;letter-spacing:1px;text-transform:uppercase;">ITEMS TO CLASSIFY</span>
+              <span style="font-size:10px;color:rgba(255,255,255,0.5);margin-left:4px;">Drag into a category above or Click to select</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.5);">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>${s.selectedItemId ? '⭐ Item Selected — Click a chamber above!' : 'Click or Drag any card'}</span>
+            </div>
+          </div>
+
+          <!-- Cards Grid: exactly 7 columns -->
+          ${s.pool.length === 0 ? `
+            <div style="padding:16px;text-align:center;background:rgba(34,197,94,0.1);border:1.5px solid #22c55e;border-radius:12px;">
+              <div style="font-size:28px;">🎉💎👑</div>
+              <h3 style="font-size:16px;font-weight:900;color:#4ade80;margin:4px 0;">ALL 14 OBJECTS ACCURATELY CLASSIFIED!</h3>
+              <p style="font-size:11px;color:rgba(255,255,255,0.7);margin-bottom:10px;">Master-level understanding of solids, liquids, and gases demonstrated!</p>
+              <button onclick="finishCrystalTrial()" style="
+                padding:8px 24px;border-radius:12px;border:none;cursor:pointer;
+                background:linear-gradient(135deg,#f59e0b,#eab308);color:#0f172a;
+                font-weight:900;font-size:13px;box-shadow:0 4px 15px rgba(245,158,11,0.5);
+              ">
+                Claim Science Crystal & Final Victory!
+              </button>
+            </div>
+          ` : `
+            <div style="display:grid;grid-template-columns:repeat(7, 1fr);gap:6px;">
+              ${s.pool.map(item => {
+                const isSelected = (s.selectedItemId === item.id);
+                const isError = (s.lastErrorItemId === item.id);
+                const badgeBg = item.category === 'solid' ? '#0070f3' : item.category === 'liquid' ? '#00b4d8' : '#e63973';
+                return `
+                  <div draggable="true"
+                       ondragstart="onCrystalItemDragStart(event, '${item.id}')"
+                       onclick="selectCrystalItem('${item.id}')"
+                       class="draggable-item-card ${isError ? 'shake-error' : ''}"
+                       style="
+                         border-radius: 10px; cursor: grab; overflow: hidden;
+                         background: ${isSelected ? 'linear-gradient(180deg, rgba(245,158,11,0.2), rgba(10,25,50,0.95))' : 'linear-gradient(180deg, rgba(14,35,70,0.9), rgba(8,20,45,0.95))'};
+                         border: 1.5px solid ${isSelected ? '#f59e0b' : isError ? '#ef4444' : 'rgba(56, 189, 248, 0.35)'};
+                         box-shadow: ${isSelected ? '0 0 14px rgba(245,158,11,0.6)' : '0 2px 6px rgba(0,0,0,0.3)'};
+                         transition: all 0.2s;
+                         display: flex; flex-direction: column; align-items: center;
+                         text-align: center;
+                       ">
+                    <!-- Item Image -->
+                    <div style="width:100%;height:56px;background:rgba(0,0,0,0.3);overflow:hidden;">
+                      <img src="${item.img}" style="width:100%;height:100%;object-fit:cover;" alt="${item.name}">
+                    </div>
+                    <!-- Item Name -->
+                    <div style="font-size:10px;font-weight:800;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding:4px 4px 2px;">
+                      ${item.name}
+                    </div>
+                    <!-- Pill Badge -->
+                    <div style="padding-bottom:5px;">
+                      <span style="
+                        display:inline-block;padding:1px 8px;border-radius:8px;
+                        font-size:8px;font-weight:900;
+                        background:${badgeBg};color:white;
+                        letter-spacing:0.5px;
+                      ">${item.tag}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `}
+        </div>
+
+      </div>
     </div>
   `;
 
@@ -2259,7 +2342,7 @@ window.dropCrystalItem = function(itemId, targetCategory) {
     crystalGameState.lastErrorItemId = null;
 
     crystalGameState.feedback = {
-      text: `✅ Correct! ${curPlayerName} accurately classified "${item.name}" as a ${targetCategory.toUpperCase()} (+50 XP)! Turn passed to ${opponentName}.`,
+      text: `Correct! "${item.name}" is a ${targetCategory.toUpperCase()} (+50 XP)! Turn passed to ${opponentName}!`,
       type: 'success'
     };
 
@@ -2271,7 +2354,7 @@ window.dropCrystalItem = function(itemId, targetCategory) {
       setTimeout(() => finishCrystalTrial(), 600);
     }
   } else {
-    // 2. Mismatch ("Turn by turn on wrong pass")!
+    // 2. Mismatch ("Wrong drops pass your turn")!
     audio.playError();
     crystalGameState.lastErrorItemId = item.id;
     crystalGameState.selectedItemId = null;
@@ -2280,7 +2363,7 @@ window.dropCrystalItem = function(itemId, targetCategory) {
     crystalGameState.activePlayer = opponentP;
 
     crystalGameState.feedback = {
-      text: `❌ Incorrect! "${item.name}" is a ${item.category.toUpperCase()}, not a ${targetCategory.toUpperCase()}! ${item.hint}. Wrong pass: Turn passed to ${opponentName}!`,
+      text: `Incorrect! "${item.name}" is a ${item.category.toUpperCase()}, not a ${targetCategory.toUpperCase()}! ${item.hint}. Wrong pass: Turn passed to ${opponentName}!`,
       type: 'error'
     };
   }
