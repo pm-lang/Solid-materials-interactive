@@ -427,3 +427,67 @@ body {
   0% { box-shadow: 0 0 10px rgba(255, 51, 102, 0.4); border-color: rgba(255, 51, 102, 0.6); }
   100% { box-shadow: 0 0 28px rgba(255, 51, 102, 0.85); border-color: rgba(255, 51, 102, 1); }
 }
+
+/* ============================================================
+   CRYSTAL TRIAL: ENRICHED DARK THEME VISUALS
+   ============================================================ */
+@keyframes crystalPulse {
+  0% { box-shadow: 0 0 20px rgba(200, 75, 250, 0.4); transform: scale(1); }
+  100% { box-shadow: 0 0 40px rgba(255, 107, 157, 0.6); transform: scale(1.05); }
+}
+
+/* Dark theme drop zone hover for crystal trial */
+.crystal-trial-modal .drop-target-zone:hover {
+  transform: scale(1.01);
+  filter: brightness(1.1);
+}
+
+.crystal-trial-modal .drop-target-zone.drag-over {
+  border-color: #ffd700 !important;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(255, 215, 0, 0.1) !important;
+  transform: scale(1.02);
+}
+
+/* Custom scrollbar for dark theme pool */
+.crystal-trial-modal ::-webkit-scrollbar {
+  width: 6px;
+}
+.crystal-trial-modal ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+.crystal-trial-modal ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+.crystal-trial-modal ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Responsive: Stack 3 columns on small screens */
+@media (max-width: 768px) {
+  .crystal-trial-modal [style*="grid-template-columns:repeat(3"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ============================================================
+   FULL SCREEN MODE STYLING ENHANCEMENTS
+   ============================================================ */
+body.fullscreen-mode {
+  overflow-y: auto;
+}
+
+body.fullscreen-mode main {
+  max-width: 100% !important;
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
+}
+
+@media (min-width: 1024px) {
+  body.fullscreen-mode .board-container {
+    height: clamp(580px, calc(100vh - 210px), 920px) !important;
+  }
+}
+
+

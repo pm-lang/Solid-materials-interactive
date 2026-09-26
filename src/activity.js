@@ -2981,7 +2981,94 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'l' || e.key === 'L' || e.key === 'Enter') {
     if (gameState.activePlayer === 2) rollDiceForPlayer(2);
   }
+
+  // Full Screen shortcut: 'f' or 'F' (when not typing in form inputs)
+  if ((e.key === 'f' || e.key === 'F') && !isModalOpen && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    e.preventDefault();
+    toggleFullScreen();
+  }
 });
+
+// ------------------------------------------------------------
+// 11. Full Screen Mode Toggle & Handlers (Matter Masters)
+// ------------------------------------------------------------
+window.toggleFullScreen = function() {
+  const isFullScreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+
+  if (!isFullScreen) {
+    const docEl = document.documentElement;
+    const reqFs = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+    if (reqFs) {
+      const res = reqFs.call(docEl);
+      if (res && res.catch) {
+        res.catch(err => console.warn('Fullscreen request error:', err));
+      }
+    }
+  } else {
+    const exitFs = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    if (exitFs) {
+      const res = exitFs.call(document);
+      if (res && res.catch) {
+        res.catch(err => console.warn('Exit fullscreen error:', err));
+      }
+    }
+  }
+};
+
+function updateFullScreenUI() {
+  const isFullScreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+
+  // Update Header Button UI
+  const headerIcon = document.getElementById('header-fullscreen-icon');
+  const headerText = document.getElementById('header-fullscreen-text');
+  const headerBtn = document.getElementById('header-fullscreen-btn');
+  if (headerIcon && headerText) {
+    if (isFullScreen) {
+      headerIcon.className = 'fa-solid fa-compress text-cyan-600';
+      headerText.textContent = 'Exit Full Screen';
+      if (headerBtn) headerBtn.title = 'Exit Full Screen (Key F or Esc)';
+    } else {
+      headerIcon.className = 'fa-solid fa-expand text-cyan-600';
+      headerText.textContent = 'Full Screen';
+      if (headerBtn) headerBtn.title = 'Toggle Full Screen (Key F)';
+    }
+  }
+
+  // Update 3D Board Toolbar Button UI
+  const boardIcon = document.getElementById('board-fullscreen-icon');
+  const boardText = document.getElementById('board-fullscreen-text');
+  const boardBtn = document.getElementById('board-fullscreen-btn');
+  if (boardIcon && boardText) {
+    if (isFullScreen) {
+      boardIcon.className = 'fa-solid fa-compress text-[10px]';
+      boardText.textContent = 'Exit Full';
+      if (boardBtn) boardBtn.title = 'Exit Full Screen (Key F or Esc)';
+    } else {
+      boardIcon.className = 'fa-solid fa-expand text-[10px]';
+      boardText.textContent = 'Full Screen';
+      if (boardBtn) boardBtn.title = 'Toggle Full Screen (Key F)';
+    }
+  }
+
+  // Toggle class on body for responsive layout enhancements
+  if (isFullScreen) {
+    document.body.classList.add('fullscreen-mode');
+  } else {
+    document.body.classList.remove('fullscreen-mode');
+  }
+
+  // Smoothly recalibrate 3D Three.js WebGL canvas size and aspect ratio
+  if (typeof onIslandWindowResize === 'function') {
+    onIslandWindowResize();
+    setTimeout(onIslandWindowResize, 80);
+    setTimeout(onIslandWindowResize, 240);
+  }
+}
+
+document.addEventListener('fullscreenchange', updateFullScreenUI);
+document.addEventListener('webkitfullscreenchange', updateFullScreenUI);
+document.addEventListener('mozfullscreenchange', updateFullScreenUI);
+document.addEventListener('MSFullscreenChange', updateFullScreenUI);
 
 document.addEventListener('DOMContentLoaded', () => {
   renderBoard();

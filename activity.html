@@ -86,7 +86,11 @@
       <!-- Right Action Utilities -->
       <div class="flex items-center space-x-2 ml-auto">
         <div id="active-turn-banner"></div>
-        <a href="index.html" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-xs font-bold text-slate-700 transition-all hover:border-cyan-500 shadow-sm">
+        <button id="header-fullscreen-btn" onclick="toggleFullScreen()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-xs font-bold text-slate-700 transition-all hover:border-cyan-500 shadow-sm hover:scale-105" title="Toggle Full Screen (Key F)">
+          <i class="fa-solid fa-expand text-cyan-600" id="header-fullscreen-icon"></i>
+          <span id="header-fullscreen-text">Full Screen</span>
+        </button>
+        <a href="index.html" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-xs font-bold text-slate-700 transition-all hover:border-cyan-500 shadow-sm hover:scale-105">
           <i class="fa-solid fa-flask text-cyan-600"></i>
           <span>Study Lab</span>
         </a>
@@ -164,16 +168,20 @@
         <canvas id="board-3d-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
 
         <!-- 3D Camera Controls Toolbar (Top-Right) -->
-        <div class="absolute top-3 right-3 flex items-center space-x-1.5 z-20">
-          <button onclick="resetIslandCamera('iso')" class="px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-cyan-400 text-blue-700 text-xs font-mono font-bold flex items-center space-x-1 shadow-md transition" title="Reset Isometric Overview">
+        <div class="absolute top-3 right-3 flex items-center space-x-1.5 z-20 flex-wrap gap-y-1 justify-end">
+          <button id="board-fullscreen-btn" onclick="toggleFullScreen()" class="px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-cyan-400 text-blue-700 text-xs font-mono font-bold flex items-center space-x-1 shadow-md transition hover:scale-105" title="Toggle Full Screen (Key F)">
+            <i class="fa-solid fa-expand text-[10px]" id="board-fullscreen-icon"></i>
+            <span id="board-fullscreen-text">Full Screen</span>
+          </button>
+          <button onclick="resetIslandCamera('iso')" class="px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-cyan-400 text-blue-700 text-xs font-mono font-bold flex items-center space-x-1 shadow-md transition hover:scale-105" title="Reset Isometric Overview">
             <i class="fa-solid fa-cube text-[10px]"></i>
             <span>3D Overview</span>
           </button>
-          <button onclick="resetIslandCamera('academy')" class="px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-slate-300 text-slate-700 text-xs font-mono font-bold flex items-center space-x-1 shadow-md transition" title="Focus Science Academy">
+          <button onclick="resetIslandCamera('academy')" class="px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-slate-300 text-slate-700 text-xs font-mono font-bold flex items-center space-x-1 shadow-md transition hover:scale-105" title="Focus Science Academy">
             <i class="fa-solid fa-landmark text-[10px]"></i>
             <span>Academy</span>
           </button>
-          <button onclick="resetIslandCamera('crystal')" class="px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-purple-400 text-purple-700 text-xs font-mono font-bold flex items-center space-x-1 shadow-md transition" title="Focus Science Crystal">
+          <button onclick="resetIslandCamera('crystal')" class="px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-white border border-purple-400 text-purple-700 text-xs font-mono font-bold flex items-center space-x-1 shadow-md transition hover:scale-105" title="Focus Science Crystal">
             <i class="fa-solid fa-gem text-[10px]"></i>
             <span>Crystal</span>
           </button>
